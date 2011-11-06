@@ -1,0 +1,310 @@
+code-engine: sh
+
+author: Colin MacDonald
+email: colin@bluegraybox.com
+title: Crafty Erlang
+{% css %}
+.syntaxhighlighter {
+  padding: 0.2em 0 0.2em 1em;
+  margin: 0 0 0 0 !important;
+  width: 100%;
+}
+.syntaxhighlighter table td.code .line {
+  padding: 0 0 0 0 !important;
+}
+.code {
+  background-color: #DDDDDD;
+  padding: 1px;
+}
+.slide h1 {
+    text-align: left;
+}
+{% end %}
+
+
+h1. Crafty Erlang
+
+h3. An elegant language for small projects
+
+
+h1. Weirdness
+* Backwards lists
+* Pattern matching
+* Recursion
+* IPC
+
+
+h1. Synergistic Weirdness
+* Backwards lists are immutable & extensible
+* Pattern matching makes recursion easy & clean
+* Pattern matching makes IPC easy & clean
+* Recursion + IPC = safe mutable resources
+
+
+h1. Recursion is Cheap & Easy
+
+h3. Use it for _everything_
+
+
+h1. Recursion
+* beginning
+
+{% code lang=erlang line_numbers=false %}
+func(Input) ->
+    Output = [],
+    func(Input, Output).
+{% end %}
+
+
+h1. Recursion
+* beginning
+
+{% code lang=erlang line_numbers=false %}
+func(Input) ->
+    Output = [],
+    func(Input, Output).
+{% end %}
+
+* end
+
+{% code lang=erlang line_numbers=false %}
+func([], Output) -> lists:reverse(Output).
+{% end %}
+
+
+h1. Recursion
+* beginning
+
+{% code lang=erlang line_numbers=false %}
+func(Input) ->
+    Output = [],
+    func(Input, Output).
+{% end %}
+
+* end
+
+{% code lang=erlang line_numbers=false %}
+func([], Output) -> lists:reverse(Output).
+{% end %}
+
+* middle
+
+{% code lang=erlang line_numbers=false %}
+func([First|Rest], Output) ->
+    NewFirst = munge(First),
+    func(Rest, [NewFirst|Output]);
+{% end %}
+
+
+h1. Backwards Lists
+
+{% code lang=erlang line_numbers=false %}
+Foo = [cat, dog].
+{% end %}
+
+pre. Foo
+|
+cat dog
+
+
+h1. Backwards Lists
+
+{% code lang=erlang line_numbers=false %}
+Bar = [monkey|Foo].
+{% end %}
+
+pre. Bar    Foo
+|      |
+monkey cat dog
+
+
+
+h1. Backwards Lists
+
+{% code lang=erlang line_numbers=false %}
+Baz = [elephant|Bar].
+{% end %}
+
+pre. Baz      Bar    Foo
+|        |      |
+elephant monkey cat dog
+
+
+
+h1. Bowling
+
+{% code lang=erlang line_numbers=false %}
+% Need to put a space before comments, or Slideshow treat them as its own comments
+ %% Beginning
+score(Rolls) ->
+    Frame = 1,
+    Score = 0,
+    score(Rolls, Frame, Score).
+{% end %}
+
+
+h1. Bowling
+
+{% code lang=erlang line_numbers=false %}
+ %% Beginning
+score(Rolls) ->
+    Frame = 1,
+    Score = 0,
+    score(Rolls, Frame, Score).
+
+ %% End
+score(_Rolls, 11, Score) -> Score;
+score([], _Frame, Score) -> Score;
+{% end %}
+
+
+h1. Bowling
+
+{% code lang=erlang line_numbers=false %}
+ %% Beginning
+score(Rolls) ->
+    Frame = 1,
+    Score = 0,
+    score(Rolls, Frame, Score).
+
+ %% End
+score(_Rolls, 11, Score) -> Score;
+score([], _Frame, Score) -> Score;
+
+ %% Middle
+score([First,Second|Rest], Frame, Score) ->
+    NewScore = Score + First + Second,
+    score(Rest, Frame + 1, NewScore).
+{% end %}
+
+
+h1. Processes are Cheap & Easy
+
+h3. Use them for _everything_
+
+h1. Immutable data structures
+{% code lang=erlang line_numbers=false %}
+Dict = dict:new(),
+Dict2 = dict:append(name, "Colin", Dict),
+Dict3 = dict:append(email, "colin@bluegraybox.com", Dict2),
+{% end %}
+
+
+h1. Wrap it in a process to manage it
+{% code lang=erlang line_numbers=false %}
+loop(Dict) ->
+    receive
+        {Pid, Key, Value} ->
+            NewDict = dict:append(Key, Value, Dict),
+            Pid ! ok,
+            loop(NewDict);  % recurse with the updated dictionary
+        {Pid, Key} ->
+            Value = case dict:find(Key, Dict) of
+                {ok, V} -> V;
+                error -> []
+            end,
+            Pid ! Value,
+            loop(Dict)
+    end.
+{% end %}
+
+
+h1. Provide a client API
+{% code lang=erlang line_numbers=false %}
+init() -> spawn(?MODULE, loop, [dict:new()]).
+
+append(Key, Value, Pid) ->
+    Pid ! {self(), Key, Value},
+    receive Resp -> Resp end.
+
+find(Key, Pid) ->
+    Pid ! {self(), Key},
+    receive Resp -> Resp end.
+{% end %}
+
+
+h1. Road test it
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> S = kvstore:init().
+<0.34.0>
+2> kvstore:find(foo, S).
+[]
+3> kvstore:append(name, "Colin", S).
+ok
+4> kvstore:find(name, S).           
+["Colin"]
+{% end %}
+
+
+h1. Is that some crazy over-designing or what?
+
+
+h1. Is that some crazy over-designing or what?
+
+_Just so we all know what a process ID looks like..._
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spawn(fun() -> ok end).
+<0.34.0>
+{% end %}
+
+
+h1. Is that some crazy over-designing or what?
+
+_Just so we all know what a process ID looks like..._
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spawn(fun() -> ok end).
+<0.34.0>
+{% end %}
+Now what does a file handle look like?
+
+
+h1. Is that some crazy over-designing or what?
+
+_Just so we all know what a process ID looks like..._
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spawn(fun() -> ok end).
+<0.34.0>
+{% end %}
+Now what does a file handle look like?
+{% code lang=erlang line_numbers=false %}
+2> file:open("foo.txt", [write]).
+{ok,<0.36.0>}
+{% end %}
+
+
+h1. Is that some crazy over-designing or what?
+
+_Just so we all know what a process ID looks like..._
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spawn(fun() -> ok end).
+<0.34.0>
+{% end %}
+Now what does a file handle look like?
+{% code lang=erlang line_numbers=false %}
+2> file:open("foo.txt", [write]).
+{ok,<0.36.0>}
+{% end %}
+This is just how Erlang does things.
+
+
+h1. Is that some crazy over-designing or what?
+
+_Just so we all know what a process ID looks like..._
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spawn(fun() -> ok end).
+<0.34.0>
+{% end %}
+Now what does a file handle look like?
+{% code lang=erlang line_numbers=false %}
+2> file:open("foo.txt", [write]).
+{ok,<0.36.0>}
+{% end %}
+This is just how Erlang does things.
+
+_p.s. The version of the key-value store in_ Erlang and OTP In Action _uses a separate process for each key!_
