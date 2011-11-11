@@ -19,6 +19,10 @@ title: Crafty Erlang
 .slide h1 {
     text-align: left;
 }
+.codeurl {
+    color: grey;
+    font-style: italic;
+}
 {% end %}
 
 
@@ -178,9 +182,41 @@ score([First,Second|Rest], Frame, Score) ->
 {% end %}
 
 
+h1. Bowling
+
+{% code lang=erlang line_numbers=false %}
+ %% Beginning
+score(Rolls) ->
+    Frame = 1,
+    Score = 0,
+    score(Rolls, Frame, Score).
+
+ %% End
+score(_Rolls, 11, Score) -> Score;
+score([], _Frame, Score) -> Score;
+
+ %% Middle
+ %% Strike
+score([10|Rest], Frame, Score) ->
+    [Bonus1, Bonus2 | _] = Rest,
+    NewScore = Score + 10 + Bonus1 + Bonus2,
+    score(Rest, Frame + 1, NewScore);
+ %% Spare
+score([First, Second | Rest], Frame, Score) when First + Second == 10 ->
+    [Bonus1 | _] = Rest,
+    NewScore = Score + 10 + Bonus1,
+    score(Rest, Frame + 1, NewScore);
+ %% Normal
+score([First,Second|Rest], Frame, Score) ->
+    NewScore = Score + First + Second,
+    score(Rest, Frame + 1, NewScore).
+{% end %}
+
+
 h1. Processes are Cheap & Easy
 
 h3. Use them for _everything_
+
 
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
@@ -188,6 +224,24 @@ Dict = dict:new(),
 Dict2 = dict:append(name, "Colin", Dict),
 Dict3 = dict:append(email, "colin@bluegraybox.com", Dict2),
 {% end %}
+
+
+h1. Simplest service: Unique ID
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+> uniq_id:init().
+true
+> uniq_id:next().
+1
+> uniq_id:next().
+2
+> uniq_id:next().
+3
+{% end %}
+
+
+h1. Simplest service: Unique ID
+{{ code uniq_id.erl lang=erlang line_numbers=false }}
 
 
 h1. Wrap it in a process to manage it
