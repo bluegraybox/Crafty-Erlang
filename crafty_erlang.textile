@@ -27,6 +27,9 @@ title: Crafty Erlang
 body {
     color: grey;
 }
+small {
+    color: lightgrey;
+}
 {% end %}
 
 
@@ -700,9 +703,189 @@ _p.s. The version of the key-value store in_ Erlang and OTP In Action _uses a se
 
 
 h1. Mash-up!
-{% step %}
 * Simple web app
-* Use the key-value store to keep score in a bowling game
-* Uses the Spooky framework
+* Modify the key-value store to keep score in a bowling game
+* Single page sends REST requests, updates itself
+* Uses the Spooky web framework & jQuery
+
+h1. Modify 'append' handler to return score
+{% code lang=erlang line_numbers=false %}
+            {append, Key, Value} ->
+                NewDict = dict:append(Key, Value, Dict),
+                From ! ok,
+                loop(NewDict)  % updated dictionary
 {% end %}
+vs
+{% code lang=erlang line_numbers=false %}
+            {append, Key, Value} ->
+                NewDict = dict:append(Key, Value, Dict),
+
+                Rolls = find_value(Key, NewDict),
+                Score = bowling_game:score(Rolls),
+                From ! Score,
+
+                loop(NewDict)  % updated dictionary
+{% end %}
+'find' handler not used.
+
+
+h1. Test drive
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+> S = bowling_store:init().
+<0.34.0>
+> bowling_store:append(colin, 3, S).
+3
+> bowling_store:append(colin, 4, S).
+7
+> bowling_store:append(colin, 10, S).
+17
+> bowling_store:append(colin, 4, S). 
+25
+{% end %}
+
+
+h1. REST API
+
+pre. http://localhost:8000/add/Player/Roll
+
+e.g.
+
+pre. http://localhost:8000/add/colin/4
+
+<small>Yes, I'm modifying state with a GET. Shhh...</small>
+
+
+h1. Web app
+{% code lang=erlang line_numbers=false %}
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+{% end %}
+
+
+h1. Web app
+{% code lang=erlang line_numbers=false %}
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])->
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+{% end %}
+
+
+h1. Web app
+{% code lang=erlang line_numbers=false %}
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])->
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+
+get(_Req, ["add", Player, RollText])->
+    {Roll, _} = string:to_integer(RollText),
+    Score = bowling_store:append(Player, Roll, store),
+    {200, io_lib:format("~p", [Score])};
+{% end %}
+
+
+h1. Web app
+{% code lang=erlang line_numbers=false %}
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])->
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+
+get(_Req, ["add", Player, RollText])->
+    {Roll, _} = string:to_integer(RollText),
+    Score = bowling_store:append(Player, Roll, store),
+    {200, io_lib:format("~p", [Score])};
+
+get(Req, [])-> get(Req, ["form.html"]);  % main page
+
+get(_Req, Path)->  % other static pages
+    Filename = filename:join(Path),
+    case file:read_file(Filename) of
+        {ok, PageBytes} -> {200, binary_to_list(PageBytes)};
+        {error, Reason} -> {404, Reason}
+    end.
+{% end %}
+
+
+h1. Run it!
+{% code lang=erlang line_numbers=false %}
+$ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
+Erlang R14B03 (erts-5.8.4) [source] [64-bit] [smp:4:4] [rq:4] [async-threads:0] [hipe] [kernel-poll:false]
+
+Eshell V5.8.4  (abort with ^G)
+1> spooky:start_link(bowling_web).
+{ok,<0.35.0>}
+2> 
+{% end %}
+
+
+h1. REST interaction
+
+!slide_images/bowling_rest_1.png(add/colin/3)!
+
+
+h1. REST interaction
+
+!slide_images/bowling_rest_2.png(add/colin/4)!
+
+
+h1. REST interaction
+
+!slide_images/bowling_rest_3.png(add/colin/10)!
+
+
+h1. REST interaction
+
+!slide_images/bowling_rest_4.png(add/colin/3)!
+
+
+h1. Webapp interaction
+
+!slide_images/bowling_app_1.png(add/colin/3)!
+
+
+h1. Webapp interaction
+
+!slide_images/bowling_app_2.png(add/colin/3)!
+
+
+h1. Webapp interaction
+
+!slide_images/bowling_app_3.png(add/colin/3)!
+
+
+h1. Webapp interaction
+
+!slide_images/bowling_app_4.png(add/colin/3)!
+
+
+h1. Webapp interaction
+
+!slide_images/bowling_app_5.png(add/colin/3)!
+
+
+h1. Webapp interaction
+
+!slide_images/bowling_app_6.png(add/colin/3)!
+
+
+h1. Webapp interaction
+
+!slide_images/bowling_app_7.png(add/colin/3)!
 
