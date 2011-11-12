@@ -1,7 +1,7 @@
--module(kvstore).
--mode(compile).
+-module(bowling_store).
+-import(bowling_game).
 
--export([init/0, append/3, find/2, test/0]).
+-export([init/0, append/3, find/2]).
 
 
 loop(Dict) ->
@@ -9,11 +9,14 @@ loop(Dict) ->
         case Req of
             {find, Key} ->
                 Value = find_value(Key, Dict),
-                From ! Value,
+                Score = bowling_game:score(Value),
+                From ! Score,
                 loop(Dict);
             {append, Key, Value} ->
                 NewDict = dict:append(Key, Value, Dict),
-                From ! ok,
+                Rolls = find_value(Key, NewDict),
+                Score = bowling_game:score(Rolls),
+                From ! Score,
                 loop(NewDict)  % updated dictionary
         end
     end.
@@ -36,15 +39,4 @@ append(Key, Value, Pid) ->
 find(Key, Pid) ->
     Pid ! {self(), {find, Key}},
     receive Resp -> Resp end.
-
-test() ->
-    Pid = init(),
-    [] = find(foo, Pid),
-    ok = append(foo, bar, Pid),
-    [bar] = find(foo, Pid),
-    ok = append(foo, baz, Pid),
-    [bar, baz] = find(foo, Pid),
-    Pid2 = init(),
-    [] = find(foo, Pid2),
-    ok.
 
