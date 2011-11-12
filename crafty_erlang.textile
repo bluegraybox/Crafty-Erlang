@@ -18,10 +18,14 @@ title: Crafty Erlang
 }
 .slide h1 {
     text-align: left;
+    color: #FF6633;
 }
 .codeurl {
     color: grey;
     font-style: italic;
+}
+body {
+    color: grey;
 }
 {% end %}
 
@@ -31,23 +35,47 @@ h1. Crafty Erlang
 h3. An elegant language for small projects
 
 
-h1. Weirdness
-* Backwards lists
-* Pattern matching
-* Recursion
-* IPC
+h1. "Synergistic Weirdness"
+
+
+h1. Weirdness - missing stuff
+{% step %}
+* Mutable variables
+*(step) Loop controls (for, while)
+*(step) Objects
+{% end %}
+
+
+h1. Weirdness - extra stuff
+% The Blub Paradox - Paul Graham - http://www.paulgraham.com/avg.html
+{% step %}
+* Pattern matching (and guard expressions)
+*(step) Recursion
+*(step) Inter-Process Communication/Messaging (IPC)
+{% end %}
 
 
 h1. Synergistic Weirdness
-* Backwards lists are immutable & extensible
-* Pattern matching makes recursion easy & clean
-* Pattern matching makes IPC easy & clean
-* Recursion + IPC = safe mutable resources
+{% step %}
+* Pattern matching + immutability = clean & easy recursion
+*(step) Pattern matching -> clean & easy IPC message handling
+*(step) Recursion + IPC = safe mutable resources
+{% end %}
 
 
-h1. Recursion is Cheap & Easy
+h1. Recursion is Cheap, Clean, & Easy
+{% step %}
+* Use it for _everything_
+*(step) Replaces iteration
+*(step) Pattern matching functions replace conditionals
+*(step) Standard idioms
+{% end %}
 
-h3. Use it for _everything_
+
+h1. Recursion
+* beginning
+* end
+* middle
 
 
 h1. Recursion
@@ -100,46 +128,58 @@ func([First|Rest], Output) ->
 {% end %}
 
 
-h1. Backwards Lists
+h1. Digression: Backwards Lists
+* *Q:* What's up with that?
+{% step %}
+* *A:* Both immutable and extensible
+{% end %}
+
+
+h1. Digression: Backwards Lists
 
 {% code lang=erlang line_numbers=false %}
 Foo = [cat, dog].
 {% end %}
 
+{% step %}
 pre. Foo
 |
-cat dog
+cat - dog
+{% end %}
 
 
-h1. Backwards Lists
+h1. Digression: Backwards Lists
 
 {% code lang=erlang line_numbers=false %}
 Bar = [monkey|Foo].
 {% end %}
 
-pre. Bar    Foo
-|      |
-monkey cat dog
+{% step %}
+pre. Bar      Foo
+|        |
+monkey - cat - dog
+{% end %}
 
 
 
-h1. Backwards Lists
+h1. Digression: Backwards Lists
 
 {% code lang=erlang line_numbers=false %}
 Baz = [elephant|Bar].
 {% end %}
 
-pre. Baz      Bar    Foo
-|        |      |
-elephant monkey cat dog
-
+{% step %}
+pre. Baz        Bar      Foo
+|          |        |
+elephant - monkey - cat - dog
+{% end %}
 
 
 h1. Bowling
 
 {% code lang=erlang line_numbers=false %}
 % Need to put a space before comments, or Slideshow treat them as its own comments
- %% Beginning
+ %% Beginning: score/1 -> score/3
 score(Rolls) ->
     Frame = 1,
     Score = 0,
@@ -152,13 +192,10 @@ h1. Bowling
 {% code lang=erlang line_numbers=false %}
  %% Beginning
 score(Rolls) ->
-    Frame = 1,
-    Score = 0,
-    score(Rolls, Frame, Score).
+    score(Rolls, 1, 0).
 
  %% End
-score(_Rolls, 11, Score) -> Score;
-score([], _Frame, Score) -> Score;
+score(_Rolls, 11, Score) -> Score.
 {% end %}
 
 
@@ -167,13 +204,10 @@ h1. Bowling
 {% code lang=erlang line_numbers=false %}
  %% Beginning
 score(Rolls) ->
-    Frame = 1,
-    Score = 0,
-    score(Rolls, Frame, Score).
+    score(Rolls, 1, 0).
 
  %% End
 score(_Rolls, 11, Score) -> Score;
-score([], _Frame, Score) -> Score;
 
  %% Middle
 score([First,Second|Rest], Frame, Score) ->
@@ -187,25 +221,23 @@ h1. Bowling
 {% code lang=erlang line_numbers=false %}
  %% Beginning
 score(Rolls) ->
-    Frame = 1,
-    Score = 0,
-    score(Rolls, Frame, Score).
+    score(Rolls, 1, 0).
 
  %% End
 score(_Rolls, 11, Score) -> Score;
-score([], _Frame, Score) -> Score;
 
- %% Middle
  %% Strike
 score([10|Rest], Frame, Score) ->
     [Bonus1, Bonus2 | _] = Rest,
     NewScore = Score + 10 + Bonus1 + Bonus2,
     score(Rest, Frame + 1, NewScore);
+
  %% Spare
 score([First, Second | Rest], Frame, Score) when First + Second == 10 ->
     [Bonus1 | _] = Rest,
     NewScore = Score + 10 + Bonus1,
     score(Rest, Frame + 1, NewScore);
+
  %% Normal
 score([First,Second|Rest], Frame, Score) ->
     NewScore = Score + First + Second,
@@ -213,134 +245,442 @@ score([First,Second|Rest], Frame, Score) ->
 {% end %}
 
 
-h1. Processes are Cheap & Easy
+h1. Bowling
 
-h3. Use them for _everything_
+h3. Several versions later...
+
+
+h1. Bowling
+
+{% code lang=erlang line_numbers=false %}
+score(Rolls) -> score(1, 0, Rolls).
+
+score(11, Score, _BonusRolls) -> Score;
+
+score(Frame, Score, [10|Rest]) ->
+    score(Frame + 1, Score + 10 + strike_bonus(Rest), Rest);
+
+score(Frame, Score, [First,Second|Rest]) when (First + Second == 10) ->
+    score(Frame + 1, Score + 10 + spare_bonus(Rest), Rest);
+
+score(Frame, Score, [First,Second|Rest]) ->
+    score(Frame + 1, Score + First + Second, Rest);
+
+score(_Frame, Score, [First]) -> Score + First;
+score(_Frame, Score, []) -> Score.
+
+
+spare_bonus([]) -> 0;
+spare_bonus([First|_Rest]) -> First.
+
+strike_bonus([]) -> 0;
+strike_bonus([Only]) -> Only;
+strike_bonus([10,Second|_Rest]) -> 10 + Second;
+strike_bonus([First,Second|_Rest]) -> First + Second.
+{% end %}
+
+
+
+h1. Processes are Cheap, Clean, & Easy
+{% step %}
+* Use them for _everything_
+*(step) All data is function params.
+*(step) Recursion + IPC = safe mutable resources
+{% end %}
 
 
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-Dict = dict:new(),
-Dict2 = dict:append(name, "Colin", Dict),
-Dict3 = dict:append(email, "colin@bluegraybox.com", Dict2),
+> D = dict:new().
 {% end %}
 
 
-h1. Simplest service: Unique ID
+h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-> uniq_id:init().
-true
-> uniq_id:next().
-1
-> uniq_id:next().
-2
-> uniq_id:next().
-3
+> D = dict:new().
+> dict:find(foo, D).
+error
 {% end %}
 
 
-h1. Simplest service: Unique ID
-{{ code uniq_id.erl lang=erlang line_numbers=false }}
-
-
-h1. Wrap it in a process to manage it
+h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-loop(Dict) ->
-    receive
-        {Pid, Key, Value} ->
-            NewDict = dict:append(Key, Value, Dict),
-            Pid ! ok,
-            loop(NewDict);  % recurse with the updated dictionary
-        {Pid, Key} ->
-            Value = case dict:find(Key, Dict) of
-                {ok, V} -> V;
-                error -> []
-            end,
-            Pid ! Value,
-            loop(Dict)
-    end.
+> D = dict:new().
+> dict:find(foo, D).
+error
+> D1 = dict:append(foo, bar, D).
+{% end %}
+
+
+h1. Immutable data structures
+{% code lang=erlang line_numbers=false %}
+> D = dict:new().
+> dict:find(foo, D).
+error
+> D1 = dict:append(foo, bar, D).
+> dict:find(foo, D1).            
+{ok,[bar]}
+{% end %}
+
+
+h1. Immutable data structures
+{% code lang=erlang line_numbers=false %}
+> D = dict:new().
+> dict:find(foo, D).
+error
+> D1 = dict:append(foo, bar, D).
+> dict:find(foo, D1).            
+{ok,[bar]}
+> D2 = dict:append(foo, baz, D1).
+{% end %}
+
+
+h1. Immutable data structures
+{% code lang=erlang line_numbers=false %}
+> D = dict:new().
+> dict:find(foo, D).
+error
+> D1 = dict:append(foo, bar, D).
+> dict:find(foo, D1).            
+{ok,[bar]}
+> D2 = dict:append(foo, baz, D1).
+> dict:find(foo, D2).            
+{ok,[bar,baz]}
+{% end %}
+
+
+h1. Immutable data structures
+{% code lang=erlang line_numbers=false %}
+> D = dict:new().
+> dict:find(foo, D).
+error
+> D1 = dict:append(foo, bar, D).
+> dict:find(foo, D1).            
+{ok,[bar]}
+> D2 = dict:append(foo, baz, D1).
+> dict:find(foo, D2).            
+{ok,[bar,baz]}
+> dict:find(foo, D1).            
+{ok,[bar]}
+> dict:find(foo, D).
+error
+{% end %}
+
+
+h1. Mutable data structures?
+{% code lang=erlang line_numbers=false %}
+> S = kvstore:init().
+{% end %}
+
+
+h1. Mutable data structures?
+{% code lang=erlang line_numbers=false %}
+> S = kvstore:init().
+> kvstore:find(foo, S).
+[]
+{% end %}
+
+
+h1. Mutable data structures?
+{% code lang=erlang line_numbers=false %}
+> S = kvstore:init().
+> kvstore:find(foo, S).
+[]
+> kvstore:append(foo, bar, S). 
+{% end %}
+
+
+h1. Mutable data structures?
+{% code lang=erlang line_numbers=false %}
+> S = kvstore:init().
+> kvstore:find(foo, S).
+[]
+> kvstore:append(foo, bar, S). 
+> kvstore:find(foo, S).    
+[bar]
+{% end %}
+
+
+h1. Mutable data structures?
+{% code lang=erlang line_numbers=false %}
+> S = kvstore:init().
+> kvstore:find(foo, S).
+[]
+> kvstore:append(foo, bar, S). 
+> kvstore:find(foo, S).    
+[bar]
+> kvstore:append(foo, baz, S).
+{% end %}
+
+
+h1. Mutable data structures?
+{% code lang=erlang line_numbers=false %}
+> S = kvstore:init().
+> kvstore:find(foo, S).
+[]
+> kvstore:append(foo, bar, S). 
+> kvstore:find(foo, S).    
+[bar]
+> kvstore:append(foo, baz, S).
+> kvstore:find(foo, S).    
+[bar,baz]
+{% end %}
+
+
+h1. How do we do that?
+{% step %}
+_Again, there's a pattern..._
+*(step) Spin up a process to manage the data
+*(step) Provide a client API
+*(step) Write the event handler
+{% end %}
+
+
+h1. Spin up data manager process
+{% code lang=erlang line_numbers=false %}
+init() ->
+    Data = dict:new(),
+    Start = fun() -> loop(Data) end,
+    spawn(Start).
+{% end %}
+
+
+h1. Spin up data manager process
+{% code lang=erlang line_numbers=false %}
+init() ->
+    Data = dict:new(),
+    Start = fun() -> loop(Data) end,
+    spawn(Start).
+{% end %}
+
+{% code lang=erlang line_numbers=false %}
+1> S = kvstore:init().
+<0.34.0>
 {% end %}
 
 
 h1. Provide a client API
 {% code lang=erlang line_numbers=false %}
-init() -> spawn(?MODULE, loop, [dict:new()]).
-
-append(Key, Value, Pid) ->
-    Pid ! {self(), Key, Value},
-    receive Resp -> Resp end.
-
-find(Key, Pid) ->
-    Pid ! {self(), Key},
+find(Key, StorePid) ->
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
     receive Resp -> Resp end.
 {% end %}
 
 
-h1. Road test it
+h1. Provide a client API
+{% code lang=erlang line_numbers=false %}
+find(Key, StorePid) ->
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
+    receive Resp -> Resp end.
+{% end %}
+
+{% code lang=erlang line_numbers=false %}
+2> kvstore:find(foo, S).
+[]
+{% end %}
+
+
+h1. Provide a client API
+{% code lang=erlang line_numbers=false %}
+find(Key, StorePid) ->
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
+    receive Resp -> Resp end.
+
+append(Key, Value, StorePid) ->
+    MyPid = self(),
+    Req = {append, Key, Value},
+    StorePid ! {MyPid, Req},
+    receive Resp -> Resp end.
+{% end %}
+
+
+h1. Provide a client API
+{% code lang=erlang line_numbers=false %}
+find(Key, StorePid) ->
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
+    receive Resp -> Resp end.
+
+append(Key, Value, StorePid) ->
+    MyPid = self(),
+    Req = {append, Key, Value},
+    StorePid ! {MyPid, Req},
+    receive Resp -> Resp end.
+{% end %}
+
+{% code lang=erlang line_numbers=false %}
+3> kvstore:append(foo, bar, S).
+ok
+4> kvstore:find(foo, S).
+[bar]
+{% end %}
+
+
+h1. Write the event handler
+{% code lang=erlang line_numbers=false %}
+loop(Dict) ->
+    receive {From, Req} ->
+        case Req of
+            {find, Key} ->
+                % handle find
+            {append, Key, Value} ->
+                % handle append
+        end
+    end.
+{% end %}
+
+
+h1. Write the event handler
+{% code lang=erlang line_numbers=false %}
+loop(Dict) ->
+    receive {From, Req} ->
+        case Req of
+            {find, Key} ->
+                % Get key value from Dict
+                % Respond with value
+                % Recurse!
+            {append, Key, Value} ->
+                % Add new value to key in Dict
+                % Respond with ok
+                % Recurse with new Dict
+        end
+    end.
+{% end %}
+
+
+h1. Write the event handler
+{% code lang=erlang line_numbers=false %}
+loop(Dict) ->
+    receive {From, Req} ->
+        case Req of
+            {find, Key} ->
+                Value = find_value(Key, Dict),
+                From ! Value,
+                loop(Dict);
+            {append, Key, Value} ->
+                NewDict = dict:append(Key, Value, Dict),
+                From ! ok,
+                loop(NewDict)  % updated dictionary!
+        end
+    end.
+{% end %}
+
+
+h1. Write the event handler
+{% code lang=erlang line_numbers=false %}
+loop(Dict) ->
+    receive {From, Req} ->
+        case Req of
+            {find, Key} ->
+                Value = find_value(Key, Dict),
+                From ! Value,
+                loop(Dict);
+            {append, Key, Value} ->
+                NewDict = dict:append(Key, Value, Dict),
+                From ! ok,
+                loop(NewDict)  % updated dictionary!
+        end
+    end.
+
+find_value(Key, Dict) ->
+    case dict:find(Key, Dict) of
+        {ok, Value} -> Value;
+        error -> []
+    end.
+{% end %}
+
+
+h1. Road test it!
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> S = kvstore:init().
+<0.34.0>
+{% end %}
+
+
+h1. Road test it!
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
 1> S = kvstore:init().
 <0.34.0>
 2> kvstore:find(foo, S).
 []
-3> kvstore:append(name, "Colin", S).
+{% end %}
+
+
+h1. Road test it!
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> S = kvstore:init().
+<0.34.0>
+2> kvstore:find(foo, S).
+[]
+3> kvstore:append(foo, bar, S).
 ok
-4> kvstore:find(name, S).           
-["Colin"]
 {% end %}
 
 
-h1. Is that some crazy over-designing or what?
-
-
-h1. Is that some crazy over-designing or what?
-
-_Just so we all know what a process ID looks like..._
+h1. Road test it!
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
-1> spawn(fun() -> ok end).
+1> S = kvstore:init().
 <0.34.0>
+2> kvstore:find(foo, S).
+[]
+3> kvstore:append(foo, bar, S).
+ok
+4> kvstore:append(foo, baz, S).
+ok
+{% end %}
+
+
+h1. Road test it!
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> S = kvstore:init().
+<0.34.0>
+2> kvstore:find(foo, S).
+[]
+3> kvstore:append(foo, bar, S).
+ok
+4> kvstore:append(foo, baz, S).
+ok
+5> kvstore:find(foo, S).       
+[bar,baz]
 {% end %}
 
 
 h1. Is that some crazy over-designing or what?
 
-_Just so we all know what a process ID looks like..._
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> spawn(fun() -> ok end).
-<0.34.0>
-{% end %}
-Now what does a file handle look like?
+
+h1. Is that some crazy over-designing or what?
+
+Want to see what a file handle looks like?
 
 
 h1. Is that some crazy over-designing or what?
 
-_Just so we all know what a process ID looks like..._
+Want to see what a file handle looks like?
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
-1> spawn(fun() -> ok end).
-<0.34.0>
-{% end %}
-Now what does a file handle look like?
-{% code lang=erlang line_numbers=false %}
-2> file:open("foo.txt", [write]).
+1> file:open("foo.txt", [write]).
 {ok,<0.36.0>}
 {% end %}
 
 
 h1. Is that some crazy over-designing or what?
 
-_Just so we all know what a process ID looks like..._
+Want to see what a file handle looks like?
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
-1> spawn(fun() -> ok end).
-<0.34.0>
-{% end %}
-Now what does a file handle look like?
-{% code lang=erlang line_numbers=false %}
-2> file:open("foo.txt", [write]).
+1> file:open("foo.txt", [write]).
 {ok,<0.36.0>}
 {% end %}
 This is just how Erlang does things.
@@ -348,17 +688,21 @@ This is just how Erlang does things.
 
 h1. Is that some crazy over-designing or what?
 
-_Just so we all know what a process ID looks like..._
+Want to see what a file handle looks like?
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
-1> spawn(fun() -> ok end).
-<0.34.0>
-{% end %}
-Now what does a file handle look like?
-{% code lang=erlang line_numbers=false %}
-2> file:open("foo.txt", [write]).
+1> file:open("foo.txt", [write]).
 {ok,<0.36.0>}
 {% end %}
 This is just how Erlang does things.
 
 _p.s. The version of the key-value store in_ Erlang and OTP In Action _uses a separate process for each key!_
+
+
+h1. Mash-up!
+{% step %}
+* Simple web app
+* Use the key-value store to keep score in a bowling game
+* Uses the Spooky framework
+{% end %}
+
