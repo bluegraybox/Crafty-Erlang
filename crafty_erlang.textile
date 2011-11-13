@@ -359,16 +359,6 @@ h1. Immutable data structures
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
 > D1 = dict:new().
-> dict:find(foo, D1).
-error
-{% end %}
-
-
-h1. Immutable data structures
-{% code lang=erlang line_numbers=false %}
-> D1 = dict:new().
-> dict:find(foo, D1).
-error
 > D2 = dict:append(foo, bar, D1).
 {% end %}
 
@@ -376,8 +366,6 @@ error
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
 > D1 = dict:new().
-> dict:find(foo, D1).
-error
 > D2 = dict:append(foo, bar, D1).
 > dict:find(foo, D2).            
 {ok,[bar]}
@@ -387,8 +375,6 @@ error
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
 > D1 = dict:new().
-> dict:find(foo, D1).
-error
 > D2 = dict:append(foo, bar, D1).
 > dict:find(foo, D2).            
 {ok,[bar]}
@@ -399,8 +385,6 @@ error
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
 > D1 = dict:new().
-> dict:find(foo, D1).
-error
 > D2 = dict:append(foo, bar, D1).
 > dict:find(foo, D2).            
 {ok,[bar]}
@@ -413,8 +397,6 @@ error
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
 > D1 = dict:new().
-> dict:find(foo, D1).
-error
 > D2 = dict:append(foo, bar, D1).
 > dict:find(foo, D2).            
 {ok,[bar]}
@@ -437,16 +419,6 @@ h1. Mutable data structures?
 h1. Mutable data structures?
 {% code lang=erlang line_numbers=false %}
 > S = kvstore:init().
-> kvstore:find(foo, S).
-[]
-{% end %}
-
-
-h1. Mutable data structures?
-{% code lang=erlang line_numbers=false %}
-> S = kvstore:init().
-> kvstore:find(foo, S).
-[]
 > kvstore:append(foo, bar, S). 
 {% end %}
 
@@ -454,8 +426,6 @@ h1. Mutable data structures?
 h1. Mutable data structures?
 {% code lang=erlang line_numbers=false %}
 > S = kvstore:init().
-> kvstore:find(foo, S).
-[]
 > kvstore:append(foo, bar, S). 
 > kvstore:find(foo, S).    
 [bar]
@@ -465,8 +435,6 @@ h1. Mutable data structures?
 h1. Mutable data structures?
 {% code lang=erlang line_numbers=false %}
 > S = kvstore:init().
-> kvstore:find(foo, S).
-[]
 > kvstore:append(foo, bar, S). 
 > kvstore:find(foo, S).    
 [bar]
@@ -477,8 +445,6 @@ h1. Mutable data structures?
 h1. Mutable data structures?
 {% code lang=erlang line_numbers=false %}
 > S = kvstore:init().
-> kvstore:find(foo, S).
-[]
 > kvstore:append(foo, bar, S). 
 > kvstore:find(foo, S).    
 [bar]
@@ -491,30 +457,31 @@ h1. Mutable data structures?
 h1. How do we do that?
 {% step %}
 _Again, there's a pattern..._
-*(step) Spin up a process to manage the data
+*(step) Spin off a process to manage the data
 *(step) Send messages to interact with that process
 *(step) Wrap that in a client API
 *(step) Write the event handler
 {% end %}
 
 
-h1. Spin up data manager process
+h1. Spin off data manager process
 {% code lang=erlang line_numbers=false %}
 init() ->
     Data = dict:new(),
     Start = fun() -> loop(Data) end,
     spawn(Start).
 {% end %}
+Returns a PID so you can send messages to loop/1.
 
 
-h1. Spin up data manager process
+h1. Spin off data manager process
 {% code lang=erlang line_numbers=false %}
 init() ->
     Data = dict:new(),
     Start = fun() -> loop(Data) end,
     spawn(Start).
 {% end %}
-
+Returns a PID so you can send messages to loop/1.
 {% code lang=erlang line_numbers=false %}
 1> S = kvstore:init().
 <0.34.0>
@@ -522,6 +489,8 @@ init() ->
 
 
 h1. Provide a client API
+
+_Send messages to the loop/1 process_
 {% code lang=erlang line_numbers=false %}
 find(Key, StorePid) ->
     MyPid = self(),
@@ -529,9 +498,12 @@ find(Key, StorePid) ->
     StorePid ! {MyPid, Req},
     receive Resp -> Resp end.
 {% end %}
+Returns whatever loop/1 responds with.
 
 
 h1. Provide a client API
+
+_Send messages to the loop/1 process_
 {% code lang=erlang line_numbers=false %}
 find(Key, StorePid) ->
     MyPid = self(),
@@ -539,7 +511,7 @@ find(Key, StorePid) ->
     StorePid ! {MyPid, Req},
     receive Resp -> Resp end.
 {% end %}
-
+Returns whatever loop/1 responds with.
 {% code lang=erlang line_numbers=false %}
 2> kvstore:find(foo, S).
 []
@@ -547,6 +519,8 @@ find(Key, StorePid) ->
 
 
 h1. Provide a client API
+
+_Send messages to the loop/1 process_
 {% code lang=erlang line_numbers=false %}
 find(Key, StorePid) ->
     MyPid = self(),
@@ -563,6 +537,8 @@ append(Key, Value, StorePid) ->
 
 
 h1. Provide a client API
+
+_Send messages to the loop/1 process_
 {% code lang=erlang line_numbers=false %}
 find(Key, StorePid) ->
     MyPid = self(),
@@ -893,6 +869,22 @@ init([])->
     [{port, 8000}].
 
 get(_Req, ["add", Player, RollText])->
+    ...
+{% end %}
+
+
+h1. Web app
+{% code lang=erlang line_numbers=false %}
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])->
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+
+get(_Req, ["add", Player, RollText])->
     {Roll, _} = string:to_integer(RollText),
     Score = bowling_store:append(Player, Roll, store),
     {200, io_lib:format("~p", [Score])};
@@ -1150,8 +1142,6 @@ Add 3 for colin
 
 
 h1. Wrap-up
-
-Take-aways:
 {% step %}
 * Synergistic Weirdness
 *(step) Patterns of use
@@ -1160,6 +1150,8 @@ Take-aways:
 
 
 h1. Crafty Erlang
+
+Colin MacDonald
 * colin@bluegraybox.com
 * http://www.bluegraybox.com/blog/
 * https://github.com/bluegraybox
