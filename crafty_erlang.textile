@@ -5,16 +5,16 @@ email: colin@bluegraybox.com
 title: Crafty Erlang
 {% css %}
 .syntaxhighlighter {
-  padding: 0.2em 0 0.2em 1em;
-  margin: 0 0 0 0 !important;
-  width: 100%;
+    padding: 0.2em 0 0.2em 1em;
+    margin: 0 0 0 0 !important;
+    width: 100%;
 }
 .syntaxhighlighter table td.code .line {
-  padding: 0 0 0 0 !important;
+    padding: 0 0 0 0 !important;
 }
 .code {
-  background-color: #DDDDDD;
-  padding: 1px;
+    background-color: #DDDDDD;
+    padding: 1px;
 }
 .slide h1 {
     text-align: left;
@@ -36,6 +36,14 @@ small {
 h1. Crafty Erlang
 
 h3. An elegant language for small projects
+
+
+h1. Where we're going
+{% step %}
+* Thinking in Erlang
+*(step) Idioms/patterns
+*(step) Small but useful projects
+{% end %}
 
 
 h1. "Synergistic Weirdness"
@@ -82,6 +90,8 @@ h1. Recursion
 
 
 h1. Recursion
+
+Simple case: list munging
 * beginning
 
 {% code lang=erlang line_numbers=false %}
@@ -92,6 +102,8 @@ func(Input) ->
 
 
 h1. Recursion
+
+Simple case: list munging
 * beginning
 
 {% code lang=erlang line_numbers=false %}
@@ -108,6 +120,8 @@ func([], Output) -> lists:reverse(Output).
 
 
 h1. Recursion
+
+Simple case: list munging
 * beginning
 
 {% code lang=erlang line_numbers=false %}
@@ -125,16 +139,17 @@ func([], Output) -> lists:reverse(Output).
 * middle
 
 {% code lang=erlang line_numbers=false %}
-func([First|Rest], Output) ->
+func([First | Rest], Output) ->
     NewFirst = munge(First),
-    func(Rest, [NewFirst|Output]);
+    func(Rest, [NewFirst | Output]);
 {% end %}
 
 
 h1. Digression: Backwards Lists
-* *Q:* What's up with that?
 {% step %}
-* *A:* Both immutable and extensible
+* *Q:* What's up with that?
+*(step) *A:* Both immutable and efficiently extensible
+**(step) Hint: _linked_ lists
 {% end %}
 
 
@@ -178,7 +193,18 @@ elephant - monkey - cat - dog
 {% end %}
 
 
-h1. Bowling
+h1. Back to recursion: Bowling Game
+{% step %}
+* Calculate score for a bowling game.
+*(step) Input is a list of rolls
+*(step) Output is a number - the final score
+*(step) Need to keep track of frame number
+*(step) Frame score may depend on other frames
+**(step) _OO metaphor shear_
+{% end %}
+
+
+h1. Bowling Game
 
 {% code lang=erlang line_numbers=false %}
 % Need to put a space before comments, or Slideshow treat them as its own comments
@@ -190,7 +216,7 @@ score(Rolls) ->
 {% end %}
 
 
-h1. Bowling
+h1. Bowling Game
 
 {% code lang=erlang line_numbers=false %}
  %% Beginning
@@ -202,7 +228,7 @@ score(_Rolls, 11, Score) -> Score.
 {% end %}
 
 
-h1. Bowling
+h1. Bowling Game
 
 {% code lang=erlang line_numbers=false %}
  %% Beginning
@@ -213,13 +239,13 @@ score(Rolls) ->
 score(_Rolls, 11, Score) -> Score;
 
  %% Middle
-score([First,Second|Rest], Frame, Score) ->
+score([First, Second | Rest], Frame, Score) ->
     NewScore = Score + First + Second,
     score(Rest, Frame + 1, NewScore).
 {% end %}
 
 
-h1. Bowling
+h1. Bowling Game
 
 {% code lang=erlang line_numbers=false %}
  %% Beginning
@@ -230,7 +256,32 @@ score(Rolls) ->
 score(_Rolls, 11, Score) -> Score;
 
  %% Strike
-score([10|Rest], Frame, Score) ->
+score([10 | Rest], Frame, Score) ->
+    ...
+
+ %% Spare
+score([First, Second | Rest], Frame, Score) when First + Second == 10 ->
+    ...
+
+ %% Normal
+score([First, Second | Rest], Frame, Score) ->
+    NewScore = Score + First + Second,
+    score(Rest, Frame + 1, NewScore).
+{% end %}
+
+
+h1. Bowling Game
+
+{% code lang=erlang line_numbers=false %}
+ %% Beginning
+score(Rolls) ->
+    score(Rolls, 1, 0).
+
+ %% End
+score(_Rolls, 11, Score) -> Score;
+
+ %% Strike
+score([10 | Rest], Frame, Score) ->
     [Bonus1, Bonus2 | _] = Rest,
     NewScore = Score + 10 + Bonus1 + Bonus2,
     score(Rest, Frame + 1, NewScore);
@@ -242,130 +293,137 @@ score([First, Second | Rest], Frame, Score) when First + Second == 10 ->
     score(Rest, Frame + 1, NewScore);
 
  %% Normal
-score([First,Second|Rest], Frame, Score) ->
+score([First, Second | Rest], Frame, Score) ->
     NewScore = Score + First + Second,
     score(Rest, Frame + 1, NewScore).
 {% end %}
 
 
-h1. Bowling
+h1. Bowling Game
 
-h3. Several versions later...
+h3. What about incomplete games?
 
 
-h1. Bowling
+h1. Bowling Game
+
+h3. Several revisions later...
+
+
+h1. Bowling Game
 
 {% code lang=erlang line_numbers=false %}
-score(Rolls) -> score(1, 0, Rolls).
+score(Rolls) -> score(Rolls, 1, 0).
 
-score(11, Score, _BonusRolls) -> Score;
+score(_Rolls, 11, Score) -> Score;
 
-score(Frame, Score, [10|Rest]) ->
-    score(Frame + 1, Score + 10 + strike_bonus(Rest), Rest);
+score([10 | Rest], Frame, Score) ->
+    score(Rest, Frame + 1, Score + 10 + strike_bonus(Rest));
 
-score(Frame, Score, [First,Second|Rest]) when (First + Second == 10) ->
-    score(Frame + 1, Score + 10 + spare_bonus(Rest), Rest);
+score([First, Second | Rest], Frame, Score) when (First + Second == 10) ->
+    score(Rest, Frame + 1, Score + 10 + spare_bonus(Rest));
 
-score(Frame, Score, [First,Second|Rest]) ->
-    score(Frame + 1, Score + First + Second, Rest);
+score([First, Second | Rest], Frame, Score) ->
+    score(Rest, Frame + 1, Score + First + Second);
 
-score(_Frame, Score, [First]) -> Score + First;
-score(_Frame, Score, []) -> Score.
+score([First], _Frame, Score) -> Score + First;
+score([], _Frame, Score) -> Score.
 
 
 spare_bonus([]) -> 0;
-spare_bonus([First|_Rest]) -> First.
+spare_bonus([First | _Rest]) -> First.
 
 strike_bonus([]) -> 0;
 strike_bonus([Only]) -> Only;
-strike_bonus([10,Second|_Rest]) -> 10 + Second;
-strike_bonus([First,Second|_Rest]) -> First + Second.
+strike_bonus([First, Second | _Rest]) -> First + Second.
 {% end %}
 
+
+h1. Processes & IPC
 
 
 h1. Processes are Cheap, Clean, & Easy
 {% step %}
 * Use them for _everything_
-*(step) All data is function params.
+*(step) Processes own data, not vice-versa
+**(step) All data are function params.
 *(step) Recursion + IPC = safe mutable resources
 {% end %}
 
 
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-> D = dict:new().
+> D1 = dict:new().
 {% end %}
 
 
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-> D = dict:new().
-> dict:find(foo, D).
+> D1 = dict:new().
+> dict:find(foo, D1).
 error
 {% end %}
 
 
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-> D = dict:new().
-> dict:find(foo, D).
+> D1 = dict:new().
+> dict:find(foo, D1).
 error
-> D1 = dict:append(foo, bar, D).
+> D2 = dict:append(foo, bar, D1).
 {% end %}
 
 
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-> D = dict:new().
-> dict:find(foo, D).
+> D1 = dict:new().
+> dict:find(foo, D1).
 error
-> D1 = dict:append(foo, bar, D).
-> dict:find(foo, D1).            
-{ok,[bar]}
-{% end %}
-
-
-h1. Immutable data structures
-{% code lang=erlang line_numbers=false %}
-> D = dict:new().
-> dict:find(foo, D).
-error
-> D1 = dict:append(foo, bar, D).
-> dict:find(foo, D1).            
-{ok,[bar]}
-> D2 = dict:append(foo, baz, D1).
-{% end %}
-
-
-h1. Immutable data structures
-{% code lang=erlang line_numbers=false %}
-> D = dict:new().
-> dict:find(foo, D).
-error
-> D1 = dict:append(foo, bar, D).
-> dict:find(foo, D1).            
-{ok,[bar]}
-> D2 = dict:append(foo, baz, D1).
+> D2 = dict:append(foo, bar, D1).
 > dict:find(foo, D2).            
+{ok,[bar]}
+{% end %}
+
+
+h1. Immutable data structures
+{% code lang=erlang line_numbers=false %}
+> D1 = dict:new().
+> dict:find(foo, D1).
+error
+> D2 = dict:append(foo, bar, D1).
+> dict:find(foo, D2).            
+{ok,[bar]}
+> D3 = dict:append(foo, baz, D2).
+{% end %}
+
+
+h1. Immutable data structures
+{% code lang=erlang line_numbers=false %}
+> D1 = dict:new().
+> dict:find(foo, D1).
+error
+> D2 = dict:append(foo, bar, D1).
+> dict:find(foo, D2).            
+{ok,[bar]}
+> D3 = dict:append(foo, baz, D2).
+> dict:find(foo, D3).            
 {ok,[bar,baz]}
 {% end %}
 
 
 h1. Immutable data structures
 {% code lang=erlang line_numbers=false %}
-> D = dict:new().
-> dict:find(foo, D).
+> D1 = dict:new().
+> dict:find(foo, D1).
 error
-> D1 = dict:append(foo, bar, D).
-> dict:find(foo, D1).            
-{ok,[bar]}
-> D2 = dict:append(foo, baz, D1).
+> D2 = dict:append(foo, bar, D1).
 > dict:find(foo, D2).            
-{ok,[bar,baz]}
-> dict:find(foo, D1).            
 {ok,[bar]}
-> dict:find(foo, D).
+> D3 = dict:append(foo, baz, D2).
+> dict:find(foo, D3).            
+{ok,[bar,baz]}
+> dict:find(foo, D2).            
+{ok,[bar]}
+> dict:find(foo, D1).
 error
 {% end %}
 
@@ -434,7 +492,8 @@ h1. How do we do that?
 {% step %}
 _Again, there's a pattern..._
 *(step) Spin up a process to manage the data
-*(step) Provide a client API
+*(step) Send messages to interact with that process
+*(step) Wrap that in a client API
 *(step) Write the event handler
 {% end %}
 
@@ -665,12 +724,12 @@ h1. Is that some crazy over-designing or what?
 
 h1. Is that some crazy over-designing or what?
 
-Want to see what a file handle looks like?
+Know what a file handle looks like?
 
 
 h1. Is that some crazy over-designing or what?
 
-Want to see what a file handle looks like?
+Know what a file handle looks like?
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
 1> file:open("foo.txt", [write]).
@@ -680,7 +739,7 @@ Eshell V5.8.4  (abort with ^G)
 
 h1. Is that some crazy over-designing or what?
 
-Want to see what a file handle looks like?
+Know what a file handle looks like?
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
 1> file:open("foo.txt", [write]).
@@ -691,7 +750,7 @@ This is just how Erlang does things.
 
 h1. Is that some crazy over-designing or what?
 
-Want to see what a file handle looks like?
+Know what a file handle looks like?
 {% code lang=erlang line_numbers=false %}
 Eshell V5.8.4  (abort with ^G)
 1> file:open("foo.txt", [write]).
@@ -705,7 +764,7 @@ _p.s. The version of the key-value store in_ Erlang and OTP In Action _uses a se
 h1. Mash-up!
 * Simple web app
 * Modify the key-value store to keep score in a bowling game
-* Single page sends REST requests, updates itself
+* Single page sends Ajax REST requests, updates itself
 * Uses the Spooky web framework & jQuery
 
 h1. Modify 'append' handler to return score
@@ -715,7 +774,7 @@ h1. Modify 'append' handler to return score
                 From ! ok,
                 loop(NewDict)  % updated dictionary
 {% end %}
-vs
+_becomes..._
 {% code lang=erlang line_numbers=false %}
             {append, Key, Value} ->
                 NewDict = dict:append(Key, Value, Dict),
@@ -727,6 +786,50 @@ vs
                 loop(NewDict)  % updated dictionary
 {% end %}
 'find' handler not used.
+
+
+h1. Test drive
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+> S = bowling_store:init().
+<0.34.0>
+{% end %}
+
+
+h1. Test drive
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+> S = bowling_store:init().
+<0.34.0>
+> bowling_store:append(colin, 3, S).
+3
+{% end %}
+
+
+h1. Test drive
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+> S = bowling_store:init().
+<0.34.0>
+> bowling_store:append(colin, 3, S).
+3
+> bowling_store:append(colin, 4, S).
+7
+{% end %}
+
+
+h1. Test drive
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+> S = bowling_store:init().
+<0.34.0>
+> bowling_store:append(colin, 3, S).
+3
+> bowling_store:append(colin, 4, S).
+7
+> bowling_store:append(colin, 10, S).
+17
+{% end %}
 
 
 h1. Test drive
@@ -814,7 +917,7 @@ get(_Req, ["add", Player, RollText])->
 
 get(Req, [])-> get(Req, ["form.html"]);  % main page
 
-get(_Req, Path)->  % other static pages
+get(_Req, Path)->  % other static resources
     Filename = filename:join(Path),
     case file:read_file(Filename) of
         {ok, PageBytes} -> {200, binary_to_list(PageBytes)};
@@ -888,4 +991,178 @@ h1. Webapp interaction
 h1. Webapp interaction
 
 !slide_images/bowling_app_7.png(add/colin/3)!
+
+
+h1. Extra credit: Web tests
+
+Hit a REST URL, check value returned
+{% step %}
+* http://localhost:8000/add/colin/3 -> 3
+*(step) http://localhost:8000/add/colin/4 -> 7
+*(step) http://localhost:8000/add/colin/10 -> 17
+*(step) http://localhost:8000/add/colin/3 -> 23
+{% end %}
+
+
+h1. Define test data
+{% code lang=erlang line_numbers=false %}
+ %% web_tests.data
+ %% Tests defined as list of {Player, Roll, Score} tuples
+[
+{colin, 3,  3},
+{colin, 4,  7},
+{colin, 10, 17},
+{colin, 3,  23}
+].  % need the period at the end
+{% end %}
+
+
+h1. Load test data from file
+{% code lang=erlang line_numbers=false %}
+load_tests() ->
+    {ok, Handle} = file:open("web_tests.data", [read]),
+    {ok, Tests} = io:read(Handle, ""),
+    file:close(Handle),
+    Tests.
+{% end %}
+
+
+h1. Make REST call
+{% code lang=erlang line_numbers=false %}
+get_score(Player, Roll) ->
+    Url = io_lib:format("http://localhost:8000/add/~p/~p", [Player, Roll]),
+    {ok, {_Status, _Header, Content}} = httpc:request(Url),
+    {Score, _} = string:to_integer(Content),
+    Score.
+{% end %}
+
+
+h1. Recurse through tests
+{% code lang=erlang line_numbers=false %}
+#!/usr/local/bin/escript
+
+ %% beginning
+main(_) ->
+    inets:start(),
+    Tests = load_tests(),
+    Passed = Failed = 0,
+    test(Tests, Passed, Failed).
+{% end %}
+
+
+h1. Recurse through tests
+{% code lang=erlang line_numbers=false %}
+#!/usr/local/bin/escript
+
+ %% beginning
+main(_) ->
+    inets:start(),
+    Tests = load_tests(),
+    Passed = Failed = 0,
+    test(Tests, Passed, Failed).
+
+ %% end
+test([], Passed, 0) ->
+    io:format("Passed! (~p tests)~n", [Passed]);
+
+test([], Passed, Failed) ->
+    io:format("Failed! Passed ~p, Failed ~p~n", [Passed, Failed]);
+{% end %}
+
+
+h1. Recurse through tests
+{% code lang=erlang line_numbers=false %}
+#!/usr/local/bin/escript
+
+ %% beginning
+main(_) ->
+    inets:start(),
+    Tests = load_tests(),
+    Passed = Failed = 0,
+    test(Tests, Passed, Failed).
+
+ %% end
+test([], Passed, 0) ->
+    io:format("Passed! (~p tests)~n", [Passed]);
+
+test([], Passed, Failed) ->
+    io:format("Failed! Passed ~p, Failed ~p~n", [Passed, Failed]);
+
+ %% middle
+test([{Player, Roll, Expected} | Tests], Passed, Failed) ->
+    case get_score(Player, Roll) of
+        Expected ->
+            io:format("."),
+            test(Tests, Passed + 1, Failed);
+        Actual ->
+            io:format("Failed: expected=~p, actual=~p~n", [Expected, Actual]),
+            test(Tests, Passed, Failed + 1)
+    end.
+{% end %}
+
+
+h1. Run it!
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spooky:start_link(bowling_web).
+{ok,<0.35.0>}
+2>
+{% end %}
+
+
+h1. Run it!
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spooky:start_link(bowling_web).
+{ok,<0.35.0>}
+2>
+{% end %}
+
+{% code lang=bash line_numbers=false %}
+$ ./web_test.erl 
+....Passed! (4 tests)
+{% end %}
+
+
+h1. Run it!
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spooky:start_link(bowling_web).
+{ok,<0.35.0>}
+2>
+{% end %}
+
+{% code lang=bash line_numbers=false %}
+$ ./web_test.erl 
+....Passed! (4 tests)
+{% end %}
+_Add some debugging to bowling_web.erl, and you'll see..._
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> spooky:start_link(bowling_web).
+{ok,<0.35.0>}
+Add 3 for colin
+Add 4 for colin
+Add 10 for colin
+Add 3 for colin
+2> 
+{% end %}
+
+
+h1. Wrap-up
+
+Take-aways:
+{% step %}
+* Synergistic Weirdness
+*(step) Patterns of use
+*(step) Think small
+{% end %}
+
+
+h1. Crafty Erlang
+* colin@bluegraybox.com
+* http://www.bluegraybox.com/blog/
+* https://github.com/bluegraybox
+* https://github.com/bluegraybox/Crafty-Erlang
+** _S9 slideshow & actual code modules_
 

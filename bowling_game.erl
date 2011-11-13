@@ -1,30 +1,30 @@
 -module(bowling_game).
 -export([score/1, test/0]).
 
-score(Rolls) -> score(1, 0, Rolls).
+score(Rolls) -> score(Rolls, 1, 0).
 
-score(11, Score, _BonusRolls) -> Score;
+score(_BonusRolls, 11, Score) -> Score;
 
-score(Frame, Score, [10|Rest]) ->
-    score(Frame + 1, Score + 10 + strike_bonus(Rest), Rest);
+score([10 | Rest], Frame, Score) ->
+    score(Rest, Frame + 1, Score + 10 + strike_bonus(Rest));
 
-score(Frame, Score, [First,Second|Rest]) when (First + Second == 10) ->
-    score(Frame + 1, Score + 10 + spare_bonus(Rest), Rest);
+score([First, Second | Rest], Frame, Score) when (First + Second == 10) ->
+    score(Rest, Frame + 1, Score + 10 + spare_bonus(Rest));
 
-score(Frame, Score, [First,Second|Rest]) ->
-    score(Frame + 1, Score + First + Second, Rest);
+score([First, Second | Rest], Frame, Score) ->
+    score(Rest, Frame + 1, Score + First + Second);
 
-score(_Frame, Score, [First]) -> Score + First;
-score(_Frame, Score, []) -> Score.
+score([First], _Frame, Score) -> Score + First;
+score([], _Frame, Score) -> Score.
 
 
 spare_bonus([]) -> 0;
-spare_bonus([First|_Rest]) -> First.
+spare_bonus([First | _Rest]) -> First.
 
 strike_bonus([]) -> 0;
 strike_bonus([Only]) -> Only;
-strike_bonus([10,Second|_Rest]) -> 10 + Second;
-strike_bonus([First,Second|_Rest]) -> First + Second.
+strike_bonus([10, Second | _Rest]) -> 10 + Second;
+strike_bonus([First, Second | _Rest]) -> First + Second.
 
 
 test() ->
@@ -45,7 +45,7 @@ test() ->
 test(Tests) -> test(0, 0, Tests).
 test(Pass, 0, []) -> io:fwrite("~nPassed! ~p tests~n", [Pass]);
 test(Pass, Fail, []) -> io:fwrite("~nFailed! ~p fail, ~p pass~n", [Fail, Pass]);
-test(Pass, Fail, [[Expected, Rolls]|Tests]) ->
+test(Pass, Fail, [[Expected, Rolls] | Tests]) ->
     case score(Rolls) of
         Expected -> io:fwrite("."),
             test(Pass + 1, Fail, Tests);

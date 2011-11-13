@@ -1,0 +1,7 @@
+%% Tests defined as {Player, Roll, Score} tuples
+[
+{colin, 3, 3},
+{colin, 4, 7},
+{colin, 10, 17},
+{colin, 3, 23}
+].  % need the period at the end

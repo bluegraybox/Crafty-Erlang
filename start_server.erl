@@ -19,6 +19,6 @@ main([SpookyDir]) ->
     spooky:start_link(bowling_web),
     io:format("Started spooky~n"),
 
-    io:get_line("Return to exit..."),
+    io:get_line("Return to exit...  "),
     spooky:stop().
 

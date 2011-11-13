@@ -1,0 +1,21 @@
+%% Tests defined as {Player, Roll, Score} tuples
+[
+{joe, 4, 4},
+{joe, 5, 9},
+{joe, 6, 15},
+{joe, 4, 19},
+{joe, 3, 25},  % spare
+{joe, 2, 27},
+{joe, 10, 37},
+{joe, 2, 41},  % strike
+{joe, 6, 53},  % strike
+%% interleaving players
+{fred, 3, 3},
+{dave, 2, 2},
+{fred, 4, 7},
+{dave, 6, 8},
+{fred, 1, 8},
+{dave, 7, 15},
+{fred, 2, 10},
+{dave, 3, 18}
+].  % need the period at the end

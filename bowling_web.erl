@@ -8,6 +8,7 @@ init([])->
     [{port, 8000}].
 
 get(_Req, ["add", Player, RollText])->
+    io:format("Add ~s for ~s~n", [RollText, Player]),
     {Roll, _} = string:to_integer(RollText),
     Score = bowling_store:append(Player, Roll, store),
     {200, io_lib:format("~p", [Score])};
