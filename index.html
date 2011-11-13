@@ -1,88 +1,1473 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset='utf-8'>
+   <meta http-equiv="content-type" content="text/html;charset=utf-8"> 
+   <title>Crafty Erlang</title>
 
-  <title>bluegraybox/Crafty-Erlang @ GitHub</title>
+<meta name="generator" content="- generator not found -">
+<meta name="author"    content="Colin MacDonald" >
 
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #5662b3;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #a99d4c; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #a99d4c; }
-    h3 { text-align: center; color: #a99d4c; }
-    a { color: #a99d4c; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
+<!-- SyntaxHighlighter (sh) style sheet; goes first so we can override styles if needed -->
+<!-- todo: add theme-ing support -->
+<link rel="stylesheet" href="highlighter/shCoreDefault.css">
+
+<!-- S6 style sheet links -->
+<link rel="stylesheet" href="crafty_erlang.css"  media="projection" id="styleProjection">
+<link rel="stylesheet" href="s6/screen.css"          media="screen" id="styleScreen">
+<link rel="stylesheet" href="s6/print.css"           media="print">
+
+<!-- S6 JS -->
+<script src="s6/jquery.js"></script>
+<script src="s6/jquery.slideshow.js"></script>
+
+<!-- SyntaxHighlighter (sh) machinery -->
+<script src="highlighter/shCore.js"></script>
+
+<!-- SyntaxHighlighter brushes, remove those for languages you don't need --> 
+<script src="highlighter/shBrushAppleScript.js"></script>
+<script src="highlighter/shBrushAS3.js"></script>
+<script src="highlighter/shBrushBash.js"></script>
+<script src="highlighter/shBrushColdFusion.js"></script>
+<script src="highlighter/shBrushCpp.js"></script>
+<script src="highlighter/shBrushCSharp.js"></script>
+<script src="highlighter/shBrushCss.js"></script>
+<script src="highlighter/shBrushDelphi.js"></script>
+<script src="highlighter/shBrushDiff.js"></script>
+<script src="highlighter/shBrushErlang.js"></script>
+<script src="highlighter/shBrushGroovy.js"></script>
+<script src="highlighter/shBrushJavaFX.js"></script>
+<script src="highlighter/shBrushJava.js"></script>
+<script src="highlighter/shBrushJScript.js"></script>
+<script src="highlighter/shBrushPerl.js"></script>
+<script src="highlighter/shBrushPhp.js"></script>
+<script src="highlighter/shBrushPlain.js"></script>
+<script src="highlighter/shBrushPowerShell.js"></script>
+<script src="highlighter/shBrushPython.js"></script>
+<script src="highlighter/shBrushRuby.js"></script>
+<script src="highlighter/shBrushSass.js"></script>
+<script src="highlighter/shBrushScala.js"></script>
+<script src="highlighter/shBrushSql.js"></script>
+<script src="highlighter/shBrushVb.js"></script>
+<script src="highlighter/shBrushXml.js"></script>
+
+
+<script type="text/javascript">
+
+$(document).ready( function() {
+  Slideshow.init();
+  SyntaxHighlighter.all();
+} );
+
+  
+ 
+</script>
+
+<!-- Better Browser Banner for Microsoft Internet Explorer (IE) -->
+<!--[if IE]>
+<script src="s6/jquery.microsoft.js"></script>
+<![endif]-->
+
+
+
 </head>
-
 <body>
-  <a href="https://github.com/bluegraybox/Crafty-Erlang"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
-  <div id="container">
-
-    <div class="download">
-      <a href="https://github.com/bluegraybox/Crafty-Erlang/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/bluegraybox/Crafty-Erlang/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="https://github.com/bluegraybox/Crafty-Erlang">Crafty-Erlang</a>
-      <span class="small">by <a href="https://github.com/bluegraybox">bluegraybox</a></span></h1>
-
-    <div class="description">
-      A(nother) presentation on Erlang as an elegant language for small applications.
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-      <h2>Authors</h2>
-      <p>Colin MacDonald (colin@bluegraybox.com)<br/>      </p>
-    
-
-    
-      <h2>Contact</h2>
-      <p>Colin MacDonald (colin.r.macdonald@gmail.com)<br/>      </p>
-    
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="https://github.com/bluegraybox/Crafty-Erlang/zipball/master">zip</a> or
-      <a href="https://github.com/bluegraybox/Crafty-Erlang/tarball/master">tar formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/bluegraybox/Crafty-Erlang</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/bluegraybox/Crafty-Erlang">bluegraybox/Crafty-Erlang</a>
-    </div>
-
+<div class="layout"> 
+  <div id="header"></div>
+  <div id="footer">
+    <h1></h1>
+    <h2></h2>
   </div>
+</div><!-- layout -->
 
+<div class="presentation">
+   
+<div class='slide '>
+<h1>Crafty Erlang</h1><h3>An elegant language for small projects</h3>
+
+</div>
+<div class='slide '>
+<h1>Where we&#8217;re going</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Thinking in Erlang</li>
+	<li class="step">Idioms/patterns</li>
+	<li class="step">Small but useful projects</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>&#8220;Synergistic Weirdness&#8221;</h1></div>
+<div class='slide '>
+<h1>Weirdness &#8211; missing stuff</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Mutable variables</li>
+	<li class="step">Loop controls (for, while)</li>
+	<li class="step">Objects</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Weirdness &#8211; extra stuff</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Pattern matching (and guard expressions)</li>
+	<li class="step">Recursion</li>
+	<li class="step">Inter-Process Communication/Messaging (IPC)</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Synergistic Weirdness</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Pattern matching + immutability = clean &amp; easy recursion</li>
+	<li class="step">Pattern matching &#8594; clean &amp; easy IPC message handling</li>
+	<li class="step">Recursion + IPC = safe mutable resources</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Recursion is Cheap, Clean, &amp; Easy</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Use it for <em>everything</em></li>
+	<li class="step">Replaces iteration</li>
+	<li class="step">Pattern matching functions replace conditionals</li>
+	<li class="step">Standard idioms</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Recursion</h1><ul>
+	<li>beginning</li>
+	<li>end</li>
+	<li>middle</li>
+</ul>
+
+</div>
+<div class='slide '>
+<h1>Recursion</h1><p>Simple case: list munging</p>
+<ul>
+	<li>beginning</li>
+</ul>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+func(Input) -&gt;
+    Output = [],
+    func(Input, Output).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Recursion</h1><p>Simple case: list munging</p>
+<ul>
+	<li>beginning</li>
+</ul>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+func(Input) -&gt;
+    Output = [],
+    func(Input, Output).
+</pre></div>
+<!-- end code -->
+
+<ul>
+	<li>end</li>
+</ul>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+func([], Output) -&gt; lists:reverse(Output).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Recursion</h1><p>Simple case: list munging</p>
+<ul>
+	<li>beginning</li>
+</ul>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+func(Input) -&gt;
+    Output = [],
+    func(Input, Output).
+</pre></div>
+<!-- end code -->
+
+<ul>
+	<li>end</li>
+</ul>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+func([], Output) -&gt; lists:reverse(Output).
+</pre></div>
+<!-- end code -->
+
+<ul>
+	<li>middle</li>
+</ul>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+func([First | Rest], Output) -&gt;
+    NewFirst = munge(First),
+    func(Rest, [NewFirst | Output]);
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Digression: Backwards Lists</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li><strong>Q:</strong> What&#8217;s up with that?</li>
+	<li class="step"><strong>A:</strong> Both immutable and efficiently extensible
+	<ul>
+		<li class="step">Hint: <em>linked</em> lists</li>
+	</ul></li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Digression: Backwards Lists</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Foo = [cat, dog].
+</pre></div>
+<!-- end code -->
+
+<!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<pre>Foo
+|
+cat - dog</pre>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Digression: Backwards Lists</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Bar = [monkey|Foo].
+</pre></div>
+<!-- end code -->
+
+<!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<pre>Bar      Foo
+|        |
+monkey - cat - dog</pre>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Digression: Backwards Lists</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Baz = [elephant|Bar].
+</pre></div>
+<!-- end code -->
+
+<!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<pre>Baz        Bar      Foo
+|          |        |
+elephant - monkey - cat - dog</pre>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Back to recursion: Bowling Game</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Calculate score for a bowling game.</li>
+	<li class="step">Input is a list of rolls</li>
+	<li class="step">Output is a number &#8211; the final score</li>
+	<li class="step">Need to keep track of frame number</li>
+	<li class="step">Frame score may depend on other frames
+	<ul>
+		<li class="step"><em>OO metaphor shear</em></li>
+	</ul></li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+
+ %% Beginning: score/1 -&gt; score/3
+score(Rolls) -&gt;
+    Frame = 1,
+    Score = 0,
+    score(Rolls, Frame, Score).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+ %% Beginning
+score(Rolls) -&gt;
+    score(Rolls, 1, 0).
+
+ %% End
+score(_Rolls, 11, Score) -&gt; Score.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+ %% Beginning
+score(Rolls) -&gt;
+    score(Rolls, 1, 0).
+
+ %% End
+score(_Rolls, 11, Score) -&gt; Score;
+
+ %% Middle
+score([First, Second | Rest], Frame, Score) -&gt;
+    NewScore = Score + First + Second,
+    score(Rest, Frame + 1, NewScore).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+ %% Beginning
+score(Rolls) -&gt;
+    score(Rolls, 1, 0).
+
+ %% End
+score(_Rolls, 11, Score) -&gt; Score;
+
+ %% Strike
+score([10 | Rest], Frame, Score) -&gt;
+    ...
+
+ %% Spare
+score([First, Second | Rest], Frame, Score) when First + Second == 10 -&gt;
+    ...
+
+ %% Normal
+score([First, Second | Rest], Frame, Score) -&gt;
+    NewScore = Score + First + Second,
+    score(Rest, Frame + 1, NewScore).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+ %% Beginning
+score(Rolls) -&gt;
+    score(Rolls, 1, 0).
+
+ %% End
+score(_Rolls, 11, Score) -&gt; Score;
+
+ %% Strike
+score([10 | Rest], Frame, Score) -&gt;
+    [Bonus1, Bonus2 | _] = Rest,
+    NewScore = Score + 10 + Bonus1 + Bonus2,
+    score(Rest, Frame + 1, NewScore);
+
+ %% Spare
+score([First, Second | Rest], Frame, Score) when First + Second == 10 -&gt;
+    [Bonus1 | _] = Rest,
+    NewScore = Score + 10 + Bonus1,
+    score(Rest, Frame + 1, NewScore);
+
+ %% Normal
+score([First, Second | Rest], Frame, Score) -&gt;
+    NewScore = Score + First + Second,
+    score(Rest, Frame + 1, NewScore).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><h3>What about incomplete games?</h3>
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><h3>Several revisions later&#8230;</h3>
+
+</div>
+<div class='slide '>
+<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+score(Rolls) -&gt; score(Rolls, 1, 0).
+
+score(_Rolls, 11, Score) -&gt; Score;
+
+score([10 | Rest], Frame, Score) -&gt;
+    score(Rest, Frame + 1, Score + 10 + strike_bonus(Rest));
+
+score([First, Second | Rest], Frame, Score) when (First + Second == 10) -&gt;
+    score(Rest, Frame + 1, Score + 10 + spare_bonus(Rest));
+
+score([First, Second | Rest], Frame, Score) -&gt;
+    score(Rest, Frame + 1, Score + First + Second);
+
+score([First], _Frame, Score) -&gt; Score + First;
+score([], _Frame, Score) -&gt; Score.
+
+
+spare_bonus([]) -&gt; 0;
+spare_bonus([First | _Rest]) -&gt; First.
+
+strike_bonus([]) -&gt; 0;
+strike_bonus([Only]) -&gt; Only;
+strike_bonus([First, Second | _Rest]) -&gt; First + Second.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Processes &amp; IPC</h1></div>
+<div class='slide '>
+<h1>Processes are Cheap, Clean, &amp; Easy</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Use them for <em>everything</em></li>
+	<li class="step">Processes own data, not vice-versa
+	<ul>
+		<li class="step">All data are function params.</li>
+	</ul></li>
+	<li class="step">Recursion + IPC = safe mutable resources</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Immutable data structures</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; D1 = dict:new().
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Immutable data structures</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; D1 = dict:new().
+&gt; D2 = dict:append(foo, bar, D1).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Immutable data structures</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; D1 = dict:new().
+&gt; D2 = dict:append(foo, bar, D1).
+&gt; dict:find(foo, D2).            
+{ok,[bar]}
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Immutable data structures</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; D1 = dict:new().
+&gt; D2 = dict:append(foo, bar, D1).
+&gt; dict:find(foo, D2).            
+{ok,[bar]}
+&gt; D3 = dict:append(foo, baz, D2).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Immutable data structures</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; D1 = dict:new().
+&gt; D2 = dict:append(foo, bar, D1).
+&gt; dict:find(foo, D2).            
+{ok,[bar]}
+&gt; D3 = dict:append(foo, baz, D2).
+&gt; dict:find(foo, D3).            
+{ok,[bar,baz]}
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Immutable data structures</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; D1 = dict:new().
+&gt; D2 = dict:append(foo, bar, D1).
+&gt; dict:find(foo, D2).            
+{ok,[bar]}
+&gt; D3 = dict:append(foo, baz, D2).
+&gt; dict:find(foo, D3).            
+{ok,[bar,baz]}
+&gt; dict:find(foo, D2).            
+{ok,[bar]}
+&gt; dict:find(foo, D1).
+error
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Mutable data structures?</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; S = kvstore:init().
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Mutable data structures?</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; S = kvstore:init().
+&gt; kvstore:append(foo, bar, S). 
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Mutable data structures?</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; S = kvstore:init().
+&gt; kvstore:append(foo, bar, S). 
+&gt; kvstore:find(foo, S).    
+[bar]
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Mutable data structures?</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; S = kvstore:init().
+&gt; kvstore:append(foo, bar, S). 
+&gt; kvstore:find(foo, S).    
+[bar]
+&gt; kvstore:append(foo, baz, S).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Mutable data structures?</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+&gt; S = kvstore:init().
+&gt; kvstore:append(foo, bar, S). 
+&gt; kvstore:find(foo, S).    
+[bar]
+&gt; kvstore:append(foo, baz, S).
+&gt; kvstore:find(foo, S).    
+[bar,baz]
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>How do we do that?</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<p><em>Again, there&#8217;s a pattern&#8230;</em></p>
+<ul>
+	<li class="step">Spin off a process to manage the data</li>
+	<li class="step">Send messages to interact with that process</li>
+	<li class="step">Wrap that in a client API</li>
+	<li class="step">Write the event handler</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Spin off data manager process</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+init() -&gt;
+    Data = dict:new(),
+    Start = fun() -&gt; loop(Data) end,
+    spawn(Start).
+</pre></div>
+<!-- end code -->
+
+<p>Returns a PID so you can send messages to loop/1.</p>
+
+</div>
+<div class='slide '>
+<h1>Spin off data manager process</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+init() -&gt;
+    Data = dict:new(),
+    Start = fun() -&gt; loop(Data) end,
+    spawn(Start).
+</pre></div>
+<!-- end code -->
+
+<p>Returns a PID so you can send messages to loop/1.</p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+1&gt; S = kvstore:init().
+&lt;0.34.0&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Provide a client API</h1><p><em>Send messages to the loop/1 process</em></p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+find(Key, StorePid) -&gt;
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
+    receive Resp -&gt; Resp end.
+</pre></div>
+<!-- end code -->
+
+<p>Returns whatever loop/1 responds with.</p>
+
+</div>
+<div class='slide '>
+<h1>Provide a client API</h1><p><em>Send messages to the loop/1 process</em></p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+find(Key, StorePid) -&gt;
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
+    receive Resp -&gt; Resp end.
+</pre></div>
+<!-- end code -->
+
+<p>Returns whatever loop/1 responds with.</p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+2&gt; kvstore:find(foo, S).
+[]
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Provide a client API</h1><p><em>Send messages to the loop/1 process</em></p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+find(Key, StorePid) -&gt;
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
+    receive Resp -&gt; Resp end.
+
+append(Key, Value, StorePid) -&gt;
+    MyPid = self(),
+    Req = {append, Key, Value},
+    StorePid ! {MyPid, Req},
+    receive Resp -&gt; Resp end.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Provide a client API</h1><p><em>Send messages to the loop/1 process</em></p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+find(Key, StorePid) -&gt;
+    MyPid = self(),
+    Req = {find, Key},
+    StorePid ! {MyPid, Req},
+    receive Resp -&gt; Resp end.
+
+append(Key, Value, StorePid) -&gt;
+    MyPid = self(),
+    Req = {append, Key, Value},
+    StorePid ! {MyPid, Req},
+    receive Resp -&gt; Resp end.
+</pre></div>
+<!-- end code -->
+
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+3&gt; kvstore:append(foo, bar, S).
+ok
+4&gt; kvstore:find(foo, S).
+[bar]
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Write the event handler</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+loop(Dict) -&gt;
+    receive {From, Req} -&gt;
+        case Req of
+            {find, Key} -&gt;
+                % handle find
+            {append, Key, Value} -&gt;
+                % handle append
+        end
+    end.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Write the event handler</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+loop(Dict) -&gt;
+    receive {From, Req} -&gt;
+        case Req of
+            {find, Key} -&gt;
+                % Get key value from Dict
+                % Respond with value
+                % Recurse!
+            {append, Key, Value} -&gt;
+                % Add new value to key in Dict
+                % Respond with ok
+                % Recurse with new Dict
+        end
+    end.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Write the event handler</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+loop(Dict) -&gt;
+    receive {From, Req} -&gt;
+        case Req of
+            {find, Key} -&gt;
+                Value = find_value(Key, Dict),
+                From ! Value,
+                loop(Dict);
+            {append, Key, Value} -&gt;
+                NewDict = dict:append(Key, Value, Dict),
+                From ! ok,
+                loop(NewDict)  % updated dictionary!
+        end
+    end.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Write the event handler</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+loop(Dict) -&gt;
+    receive {From, Req} -&gt;
+        case Req of
+            {find, Key} -&gt;
+                Value = find_value(Key, Dict),
+                From ! Value,
+                loop(Dict);
+            {append, Key, Value} -&gt;
+                NewDict = dict:append(Key, Value, Dict),
+                From ! ok,
+                loop(NewDict)  % updated dictionary!
+        end
+    end.
+
+find_value(Key, Dict) -&gt;
+    case dict:find(Key, Dict) of
+        {ok, Value} -&gt; Value;
+        error -&gt; []
+    end.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Road test it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; S = kvstore:init().
+&lt;0.34.0&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Road test it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; S = kvstore:init().
+&lt;0.34.0&gt;
+2&gt; kvstore:find(foo, S).
+[]
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Road test it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; S = kvstore:init().
+&lt;0.34.0&gt;
+2&gt; kvstore:find(foo, S).
+[]
+3&gt; kvstore:append(foo, bar, S).
+ok
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Road test it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; S = kvstore:init().
+&lt;0.34.0&gt;
+2&gt; kvstore:find(foo, S).
+[]
+3&gt; kvstore:append(foo, bar, S).
+ok
+4&gt; kvstore:append(foo, baz, S).
+ok
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Road test it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; S = kvstore:init().
+&lt;0.34.0&gt;
+2&gt; kvstore:find(foo, S).
+[]
+3&gt; kvstore:append(foo, bar, S).
+ok
+4&gt; kvstore:append(foo, baz, S).
+ok
+5&gt; kvstore:find(foo, S).       
+[bar,baz]
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Is that some crazy over-designing or what?</h1></div>
+<div class='slide '>
+<h1>Is that some crazy over-designing or what?</h1><p>Know what a file handle looks like?</p>
+
+</div>
+<div class='slide '>
+<h1>Is that some crazy over-designing or what?</h1><p>Know what a file handle looks like?</p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; file:open(&quot;foo.txt&quot;, [write]).
+{ok,&lt;0.36.0&gt;}
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Is that some crazy over-designing or what?</h1><p>Know what a file handle looks like?</p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; file:open(&quot;foo.txt&quot;, [write]).
+{ok,&lt;0.36.0&gt;}
+</pre></div>
+<!-- end code -->
+
+<p>This is just how Erlang does things.</p>
+
+</div>
+<div class='slide '>
+<h1>Is that some crazy over-designing or what?</h1><p>Know what a file handle looks like?</p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; file:open(&quot;foo.txt&quot;, [write]).
+{ok,&lt;0.36.0&gt;}
+</pre></div>
+<!-- end code -->
+
+<p>This is just how Erlang does things.</p>
+<p><em>p.s. The version of the key-value store in</em> Erlang and OTP In Action <em>uses a separate process for each key!</em></p>
+
+</div>
+<div class='slide '>
+<h1>Mash-up!</h1><ul>
+	<li>Simple web app</li>
+	<li>Modify the key-value store to keep score in a bowling game</li>
+	<li>Single page sends Ajax REST requests, updates itself</li>
+	<li>Uses the Spooky web framework &amp; jQuery</li>
+</ul>
+
+</div>
+<div class='slide '>
+<h1>Modify &#8216;append&#8217; handler to return score</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+            {append, Key, Value} -&gt;
+                NewDict = dict:append(Key, Value, Dict),
+                From ! ok,
+                loop(NewDict)  % updated dictionary
+</pre></div>
+<!-- end code -->
+
+<p><em>becomes&#8230;</em></p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+            {append, Key, Value} -&gt;
+                NewDict = dict:append(Key, Value, Dict),
+
+                Rolls = find_value(Key, NewDict),
+                Score = bowling_game:score(Rolls),
+                From ! Score,
+
+                loop(NewDict)  % updated dictionary
+</pre></div>
+<!-- end code -->
+
+<p>&#8216;find&#8217; handler not used.</p>
+
+</div>
+<div class='slide '>
+<h1>Test drive</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+&gt; S = bowling_store:init().
+&lt;0.34.0&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Test drive</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+&gt; S = bowling_store:init().
+&lt;0.34.0&gt;
+&gt; bowling_store:append(colin, 3, S).
+3
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Test drive</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+&gt; S = bowling_store:init().
+&lt;0.34.0&gt;
+&gt; bowling_store:append(colin, 3, S).
+3
+&gt; bowling_store:append(colin, 4, S).
+7
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Test drive</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+&gt; S = bowling_store:init().
+&lt;0.34.0&gt;
+&gt; bowling_store:append(colin, 3, S).
+3
+&gt; bowling_store:append(colin, 4, S).
+7
+&gt; bowling_store:append(colin, 10, S).
+17
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Test drive</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+&gt; S = bowling_store:init().
+&lt;0.34.0&gt;
+&gt; bowling_store:append(colin, 3, S).
+3
+&gt; bowling_store:append(colin, 4, S).
+7
+&gt; bowling_store:append(colin, 10, S).
+17
+&gt; bowling_store:append(colin, 4, S). 
+25
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>REST API</h1><pre>http://localhost:8000/add/Player/Roll</pre>
+<p>e.g.</p>
+<pre>http://localhost:8000/add/colin/4</pre>
+<p><small>Yes, I&#8217;m modifying state with a GET. Shhh&#8230;</small></p>
+
+</div>
+<div class='slide '>
+<h1>Web app</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Web app</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])-&gt;
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Web app</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])-&gt;
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+
+get(_Req, [&quot;add&quot;, Player, RollText])-&gt;
+    ...
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Web app</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])-&gt;
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+
+get(_Req, [&quot;add&quot;, Player, RollText])-&gt;
+    {Roll, _} = string:to_integer(RollText),
+    Score = bowling_store:append(Player, Roll, store),
+    {200, io_lib:format(&quot;~p&quot;, [Score])};
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Web app</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])-&gt;
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+
+get(_Req, [&quot;add&quot;, Player, RollText])-&gt;
+    {Roll, _} = string:to_integer(RollText),
+    Score = bowling_store:append(Player, Roll, store),
+    {200, io_lib:format(&quot;~p&quot;, [Score])};
+
+get(Req, [])-&gt; get(Req, [&quot;form.html&quot;]);  % main page
+
+get(_Req, Path)-&gt;  % other static resources
+    Filename = filename:join(Path),
+    case file:read_file(Filename) of
+        {ok, PageBytes} -&gt; {200, binary_to_list(PageBytes)};
+        {error, Reason} -&gt; {404, Reason}
+    end.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+$ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
+Erlang R14B03 (erts-5.8.4) [source] [64-bit] [smp:4:4] [rq:4] [async-threads:0] [hipe] [kernel-poll:false]
+
+Eshell V5.8.4  (abort with ^G)
+1&gt; spooky:start_link(bowling_web).
+{ok,&lt;0.35.0&gt;}
+2&gt; 
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>REST interaction</h1><p><img src="slide_images/bowling_rest_1.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>REST interaction</h1><p><img src="slide_images/bowling_rest_2.png" title="add/colin/4" alt="add/colin/4" /></p>
+
+</div>
+<div class='slide '>
+<h1>REST interaction</h1><p><img src="slide_images/bowling_rest_3.png" title="add/colin/10" alt="add/colin/10" /></p>
+
+</div>
+<div class='slide '>
+<h1>REST interaction</h1><p><img src="slide_images/bowling_rest_4.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Webapp interaction</h1><p><img src="slide_images/bowling_app_1.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Webapp interaction</h1><p><img src="slide_images/bowling_app_2.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Webapp interaction</h1><p><img src="slide_images/bowling_app_3.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Webapp interaction</h1><p><img src="slide_images/bowling_app_4.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Webapp interaction</h1><p><img src="slide_images/bowling_app_5.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Webapp interaction</h1><p><img src="slide_images/bowling_app_6.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Webapp interaction</h1><p><img src="slide_images/bowling_app_7.png" title="add/colin/3" alt="add/colin/3" /></p>
+
+</div>
+<div class='slide '>
+<h1>Extra credit: Web tests</h1><p>Hit a REST URL, check value returned</p>
+<!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>http://localhost:8000/add/colin/3 &#8594; 3</li>
+	<li class="step">http://localhost:8000/add/colin/4 &#8594; 7</li>
+	<li class="step">http://localhost:8000/add/colin/10 &#8594; 17</li>
+	<li class="step">http://localhost:8000/add/colin/3 &#8594; 23</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Define test data</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+ %% web_tests.data
+ %% Tests defined as list of {Player, Roll, Score} tuples
+[
+{colin, 3,  3},
+{colin, 4,  7},
+{colin, 10, 17},
+{colin, 3,  23}
+].  % need the period at the end
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Load test data from file</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+load_tests() -&gt;
+    {ok, Handle} = file:open(&quot;web_tests.data&quot;, [read]),
+    {ok, Tests} = io:read(Handle, &quot;&quot;),
+    file:close(Handle),
+    Tests.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Make REST call</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+get_score(Player, Roll) -&gt;
+    Url = io_lib:format(&quot;http://localhost:8000/add/~p/~p&quot;, [Player, Roll]),
+    {ok, {_Status, _Header, Content}} = httpc:request(Url),
+    {Score, _} = string:to_integer(Content),
+    Score.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Recurse through tests</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+#!/usr/local/bin/escript
+
+ %% beginning
+main(_) -&gt;
+    inets:start(),
+    Tests = load_tests(),
+    Passed = Failed = 0,
+    test(Tests, Passed, Failed).
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Recurse through tests</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+#!/usr/local/bin/escript
+
+ %% beginning
+main(_) -&gt;
+    inets:start(),
+    Tests = load_tests(),
+    Passed = Failed = 0,
+    test(Tests, Passed, Failed).
+
+ %% end
+test([], Passed, 0) -&gt;
+    io:format(&quot;Passed! (~p tests)~n&quot;, [Passed]);
+
+test([], Passed, Failed) -&gt;
+    io:format(&quot;Failed! Passed ~p, Failed ~p~n&quot;, [Passed, Failed]);
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Recurse through tests</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+#!/usr/local/bin/escript
+
+ %% beginning
+main(_) -&gt;
+    inets:start(),
+    Tests = load_tests(),
+    Passed = Failed = 0,
+    test(Tests, Passed, Failed).
+
+ %% end
+test([], Passed, 0) -&gt;
+    io:format(&quot;Passed! (~p tests)~n&quot;, [Passed]);
+
+test([], Passed, Failed) -&gt;
+    io:format(&quot;Failed! Passed ~p, Failed ~p~n&quot;, [Passed, Failed]);
+
+ %% middle
+test([{Player, Roll, Expected} | Tests], Passed, Failed) -&gt;
+    case get_score(Player, Roll) of
+        Expected -&gt;
+            io:format(&quot;.&quot;),
+            test(Tests, Passed + 1, Failed);
+        Actual -&gt;
+            io:format(&quot;Failed: expected=~p, actual=~p~n&quot;, [Expected, Actual]),
+            test(Tests, Passed, Failed + 1)
+    end.
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; spooky:start_link(bowling_web).
+{ok,&lt;0.35.0&gt;}
+2&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; spooky:start_link(bowling_web).
+{ok,&lt;0.35.0&gt;}
+2&gt;
+</pre></div>
+<!-- end code -->
+
+<!-- begin code{:line_numbers=>"false", :lang=>"bash"} -->
+<div class='code'><pre class='brush: bash toolbar: false gutter: false'>
+$ ./web_test.erl 
+....Passed! (4 tests)
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; spooky:start_link(bowling_web).
+{ok,&lt;0.35.0&gt;}
+2&gt;
+</pre></div>
+<!-- end code -->
+
+<!-- begin code{:line_numbers=>"false", :lang=>"bash"} -->
+<div class='code'><pre class='brush: bash toolbar: false gutter: false'>
+$ ./web_test.erl 
+....Passed! (4 tests)
+</pre></div>
+<!-- end code -->
+
+<p><em>Add some debugging to bowling_web.erl, and you&#8217;ll see&#8230;</em></p>
+<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+Eshell V5.8.4  (abort with ^G)
+1&gt; spooky:start_link(bowling_web).
+{ok,&lt;0.35.0&gt;}
+Add 3 for colin
+Add 4 for colin
+Add 10 for colin
+Add 3 for colin
+2&gt; 
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Wrap-up</h1><!-- begin step {} -->
+<div class='step' markdown='block'>
+
+<ul>
+	<li>Synergistic Weirdness</li>
+	<li class="step">Patterns of use</li>
+	<li class="step">Think small</li>
+</ul>
+</div>
+<!-- end step -->
+
+
+</div>
+<div class='slide '>
+<h1>Crafty Erlang</h1><p>Colin MacDonald</p>
+<ul>
+	<li>colin@bluegraybox.com</li>
+	<li>http://www.bluegraybox.com/blog/</li>
+	<li>https://github.com/bluegraybox</li>
+	<li>https://github.com/bluegraybox/Crafty-Erlang
+	<ul>
+		<li><em>S9 slideshow &amp; actual code modules</em></li>
+	</ul></li>
+</ul></div>
+
+
+</div><!-- presentation -->
 </body>
 </html>
