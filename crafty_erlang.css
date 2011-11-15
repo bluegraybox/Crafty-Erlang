@@ -115,3 +115,8 @@ body {
 small {
     color: lightgrey;
 }
+.author {
+    color: grey;
+    font-style: italic;
+    margin-top: 4em;
+}
