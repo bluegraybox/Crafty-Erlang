@@ -8,20 +8,20 @@ loop(Dict) ->
     receive {From, Req} ->
         case Req of
             {find, Key} ->
-                Value = find_value(Key, Dict),
+                Value = dict_find(Key, Dict),
                 Score = bowling_game:score(Value),
                 From ! Score,
                 loop(Dict);
             {append, Key, Value} ->
                 NewDict = dict:append(Key, Value, Dict),
-                Rolls = find_value(Key, NewDict),
+                Rolls = dict_find(Key, NewDict),
                 Score = bowling_game:score(Rolls),
                 From ! Score,
                 loop(NewDict)  % updated dictionary
         end
     end.
 
-find_value(Key, Dict) ->
+dict_find(Key, Dict) ->
     case dict:find(Key, Dict) of
         {ok, Value} -> Value;
         error -> []

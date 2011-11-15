@@ -30,12 +30,19 @@ body {
 small {
     color: lightgrey;
 }
+.author {
+    color: grey;
+    font-style: italic;
+    margin-top: 4em;
+}
 {% end %}
 
 
 h1. Crafty Erlang
 
 h3. An elegant language for small projects
+
+p(author). Colin MacDonald
 
 
 h1. Where we're going
@@ -564,13 +571,11 @@ ok
 h1. Write the event handler
 {% code lang=erlang line_numbers=false %}
 loop(Dict) ->
-    receive {From, Req} ->
-        case Req of
-            {find, Key} ->
-                % handle find
-            {append, Key, Value} ->
-                % handle append
-        end
+    receive
+        {From, {find, Key}} ->
+            % handle find
+        {From, {append, Key, Value}} ->
+            % handle append
     end.
 {% end %}
 
@@ -578,17 +583,15 @@ loop(Dict) ->
 h1. Write the event handler
 {% code lang=erlang line_numbers=false %}
 loop(Dict) ->
-    receive {From, Req} ->
-        case Req of
-            {find, Key} ->
-                % Get key value from Dict
-                % Respond with value
-                % Recurse!
-            {append, Key, Value} ->
-                % Add new value to key in Dict
-                % Respond with ok
-                % Recurse with new Dict
-        end
+    receive
+        {From, {find, Key}} ->
+            % Get key value from Dict
+            % Respond with value
+            % Recurse!
+        {From, {append, Key, Value}} ->
+            % Add new value to key in Dict
+            % Respond with ok
+            % Recurse with new Dict
     end.
 {% end %}
 
@@ -596,17 +599,15 @@ loop(Dict) ->
 h1. Write the event handler
 {% code lang=erlang line_numbers=false %}
 loop(Dict) ->
-    receive {From, Req} ->
-        case Req of
-            {find, Key} ->
-                Value = find_value(Key, Dict),
-                From ! Value,
-                loop(Dict);
-            {append, Key, Value} ->
-                NewDict = dict:append(Key, Value, Dict),
-                From ! ok,
-                loop(NewDict)  % updated dictionary!
-        end
+    receive
+        {From, {find, Key}} ->
+            Value = dict_find(Key, Dict),
+            From ! Value,
+            loop(Dict);
+        {From, {append, Key, Value}} ->
+            NewDict = dict:append(Key, Value, Dict),
+            From ! ok,
+            loop(NewDict)  % updated dictionary!
     end.
 {% end %}
 
@@ -614,20 +615,18 @@ loop(Dict) ->
 h1. Write the event handler
 {% code lang=erlang line_numbers=false %}
 loop(Dict) ->
-    receive {From, Req} ->
-        case Req of
-            {find, Key} ->
-                Value = find_value(Key, Dict),
-                From ! Value,
-                loop(Dict);
-            {append, Key, Value} ->
-                NewDict = dict:append(Key, Value, Dict),
-                From ! ok,
-                loop(NewDict)  % updated dictionary!
-        end
+    receive
+        {From, {find, Key}} ->
+            Value = dict_find(Key, Dict),
+            From ! Value,
+            loop(Dict);
+        {From, {append, Key, Value}} ->
+            NewDict = dict:append(Key, Value, Dict),
+            From ! ok,
+            loop(NewDict)  % updated dictionary!
     end.
 
-find_value(Key, Dict) ->
+dict_find(Key, Dict) ->
     case dict:find(Key, Dict) of
         {ok, Value} -> Value;
         error -> []
@@ -745,21 +744,21 @@ h1. Mash-up!
 
 h1. Modify 'append' handler to return score
 {% code lang=erlang line_numbers=false %}
-            {append, Key, Value} ->
-                NewDict = dict:append(Key, Value, Dict),
-                From ! ok,
-                loop(NewDict)  % updated dictionary
+        {From, {append, Key, Value}} ->
+            NewDict = dict:append(Key, Value, Dict),
+            From ! ok,
+            loop(NewDict)  % updated dictionary
 {% end %}
 _becomes..._
 {% code lang=erlang line_numbers=false %}
-            {append, Key, Value} ->
-                NewDict = dict:append(Key, Value, Dict),
+        {From, {append, Key, Value}} ->
+            NewDict = dict:append(Key, Value, Dict),
 
-                Rolls = find_value(Key, NewDict),
-                Score = bowling_game:score(Rolls),
-                From ! Score,
+            Rolls = dict_find(Key, NewDict),
+            Score = bowling_game:score(Rolls),
+            From ! Score,
 
-                loop(NewDict)  % updated dictionary
+            loop(NewDict)  % updated dictionary
 {% end %}
 'find' handler not used.
 

@@ -8,7 +8,7 @@ loop(Dict) ->
     receive {From, Req} ->
         case Req of
             {find, Key} ->
-                Value = find_value(Key, Dict),
+                Value = dict_find(Key, Dict),
                 From ! Value,
                 loop(Dict);
             {append, Key, Value} ->
@@ -18,7 +18,7 @@ loop(Dict) ->
         end
     end.
 
-find_value(Key, Dict) ->
+dict_find(Key, Dict) ->
     case dict:find(Key, Dict) of
         {ok, Value} -> Value;
         error -> []
