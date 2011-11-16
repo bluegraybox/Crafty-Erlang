@@ -76,8 +76,10 @@ h1. Weirdness - extra stuff
 h1. Synergistic Weirdness
 {% step %}
 * Pattern matching + immutability = clean & easy recursion
+**(step) All data are function params.
 *(step) Pattern matching -> clean & easy IPC message handling
 *(step) Recursion + IPC = safe mutable resources
+**(step) Processes own data, not vice-versa
 {% end %}
 
 
@@ -156,7 +158,7 @@ h1. Digression: Backwards Lists
 {% step %}
 * *Q:* What's up with that?
 *(step) *A:* Both immutable and efficiently extensible
-**(step) Hint: _linked_ lists
+**(step) Hint: _singly_ linked lists
 {% end %}
 
 
@@ -176,6 +178,7 @@ cat - dog
 h1. Digression: Backwards Lists
 
 {% code lang=erlang line_numbers=false %}
+Foo = [cat, dog].
 Bar = [monkey|Foo].
 {% end %}
 
@@ -190,6 +193,8 @@ monkey - cat - dog
 h1. Digression: Backwards Lists
 
 {% code lang=erlang line_numbers=false %}
+Foo = [cat, dog].
+Bar = [monkey|Foo].
 Baz = [elephant|Bar].
 {% end %}
 
@@ -205,7 +210,7 @@ h1. Back to recursion: Bowling Game
 * Calculate score for a bowling game.
 *(step) Input is a list of rolls
 *(step) Output is a number - the final score
-*(step) Need to keep track of frame number
+*(step) Need to keep track of frame numbers - not fixed number of rolls
 *(step) Frame score may depend on other frames
 **(step) _OO metaphor shear_
 {% end %}
@@ -313,6 +318,8 @@ h3. What about incomplete games?
 
 h1. Bowling Game
 
+h3. What about incomplete games?
+
 h3. Several revisions later...
 
 
@@ -345,75 +352,179 @@ strike_bonus([First, Second | _Rest]) -> First + Second.
 {% end %}
 
 
-h1. Processes & IPC
+h1. Ok, that's an algorithm
+
+To make it useful, we need to add
+* interface
+* storage (mutable!)
 
 
-h1. Processes are Cheap, Clean, & Easy
-{% step %}
-* Use them for _everything_
-*(step) Processes own data, not vice-versa
-**(step) All data are function params.
-*(step) Recursion + IPC = safe mutable resources
+h1. Sketching the CLI
+
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> 
 {% end %}
 
 
-h1. Immutable data structures
+h1. Sketching the CLI
+
 {% code lang=erlang line_numbers=false %}
-> D1 = dict:new().
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
 {% end %}
 
 
-h1. Immutable data structures
+h1. Sketching the CLI
+
 {% code lang=erlang line_numbers=false %}
-> D1 = dict:new().
-> D2 = dict:append(foo, bar, D1).
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
 {% end %}
 
 
-h1. Immutable data structures
+h1. Sketching the CLI
+
 {% code lang=erlang line_numbers=false %}
-> D1 = dict:new().
-> D2 = dict:append(foo, bar, D1).
-> dict:find(foo, D2).            
-{ok,[bar]}
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
+3> {Roll, _} = string:to_integer(RollText).
+{4,[]}
 {% end %}
 
 
-h1. Immutable data structures
+h1. Sketching the CLI
+
 {% code lang=erlang line_numbers=false %}
-> D1 = dict:new().
-> D2 = dict:append(foo, bar, D1).
-> dict:find(foo, D2).            
-{ok,[bar]}
-> D3 = dict:append(foo, baz, D2).
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
+3> {Roll, _} = string:to_integer(RollText).
+{4,[]}
+4> GameData = dict:new().
+{dict,0,...
 {% end %}
 
 
-h1. Immutable data structures
+h1. Sketching the CLI
+
 {% code lang=erlang line_numbers=false %}
-> D1 = dict:new().
-> D2 = dict:append(foo, bar, D1).
-> dict:find(foo, D2).            
-{ok,[bar]}
-> D3 = dict:append(foo, baz, D2).
-> dict:find(foo, D3).            
-{ok,[bar,baz]}
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
+3> {Roll, _} = string:to_integer(RollText).
+{4,[]}
+4> GameData = dict:new().
+{dict,0,...
+5> NewGameData = dict:append(Player, Roll, GameData).
+{dict,1,...
 {% end %}
 
 
-h1. Immutable data structures
+h1. Sketching the CLI
+
 {% code lang=erlang line_numbers=false %}
-> D1 = dict:new().
-> D2 = dict:append(foo, bar, D1).
-> dict:find(foo, D2).            
-{ok,[bar]}
-> D3 = dict:append(foo, baz, D2).
-> dict:find(foo, D3).            
-{ok,[bar,baz]}
-> dict:find(foo, D2).            
-{ok,[bar]}
-> dict:find(foo, D1).
-error
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
+3> {Roll, _} = string:to_integer(RollText).
+{4,[]}
+4> GameData = dict:new().
+{dict,0,...
+5> NewGameData = dict:append(Player, Roll, GameData).
+{dict,1,...
+6> {ok, Rolls} = dict:find(Player, NewGameData).
+{ok,[4]}
+{% end %}
+
+
+h1. Sketching the CLI
+
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
+3> {Roll, _} = string:to_integer(RollText).
+{4,[]}
+4> GameData = dict:new().
+{dict,0,...
+5> NewGameData = dict:append(Player, Roll, GameData).
+{dict,1,...
+6> {ok, Rolls} = dict:find(Player, NewGameData).
+{ok,[4]}
+7> Score = bowling_game:score(Rolls).
+4
+{% end %}
+
+
+h1. Sketching the CLI
+
+{% code lang=erlang line_numbers=false %}
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
+3> {Roll, _} = string:to_integer(RollText).
+{4,[]}
+4> GameData = dict:new().
+{dict,0,...
+5> NewGameData = dict:append(Player, Roll, GameData).
+{dict,1,...
+6> {ok, Rolls} = dict:find(Player, NewGameData).
+{ok,[4]}
+7> Score = bowling_game:score(Rolls).
+4
+{% end %}
+Normally, you'd start iterating at this point...
+
+
+h1. Immutability + Recursion
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    Line = io:get_line("Next> "),
+    [Player, RollText] = string:tokens(Line, " \t\n"),
+    {Roll, _} = string:to_integer(RollText),
+    NewGameData = dict:append(Player, Roll, GameData),
+    {ok, Rolls} = dict:find(Player, NewGameData).
+    Score = bowling_game:score(Rolls).
+    io:format("New score for ~s: ~p~n", [Player, Score]),
+    loop(NewGameData).
+{% end %}
+
+
+h1. Escript kicks it off
+{% code lang=erlang line_numbers=false %}
+#!/usr/local/bin/escript
+
+-import(bowling_game).
+
+main([]) ->
+    loop(dict:new()).
 {% end %}
 
 

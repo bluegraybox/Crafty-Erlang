@@ -3,9 +3,9 @@
 -import(bowling_game).
 
 main([]) ->
-    next_roll(dict:new()).
+    loop(dict:new()).
 
-next_roll(Dict) ->
+loop(Dict) ->
     Line = io:get_line("Next> "),
     case string:tokens(Line, " \t\n") of
         ["q"] ->
@@ -16,7 +16,7 @@ next_roll(Dict) ->
             Rolls = dict_find(Player, NewDict),
             Score = bowling_game:score(Rolls),
             io:format("New score for ~s: ~p~n", [Player, Score]),
-            next_roll(NewDict)
+            loop(NewDict)
     end.
 
 dict_find(Key, Dict) ->
