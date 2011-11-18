@@ -120,3 +120,6 @@ small {
     font-style: italic;
     margin-top: 4em;
 }
+li.none {
+    list-style-type: none;
+}
