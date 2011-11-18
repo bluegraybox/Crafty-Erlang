@@ -964,11 +964,11 @@ h1. Wrap-up
 
 h1. Crafty Erlang
 
-* https://bluegraybox.github.com/Crafty-Erlang - _presentation_
-* https://github.com/bluegraybox/Crafty-Erlang - _S9 slideshow & actual code modules_
+* "bluegraybox.github.com/Crafty-Erlang":http://bluegraybox.github.com/Crafty-Erlang - _presentation_
+* "github.com/bluegraybox/Crafty-Erlang":http://github.com/bluegraybox/Crafty-Erlang - _S9 slideshow & actual code modules_
 
 Colin MacDonald
-* colin@bluegraybox.com
-* bluegraybox.com/blog
-* github.com/bluegraybox
+* "colin@bluegraybox.com":mailto:colin@bluegraybox.com
+* "bluegraybox.com/blog":http://bluegraybox.com/blog
+* "github.com/bluegraybox":http://github.com/bluegraybox
 
