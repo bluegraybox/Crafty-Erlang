@@ -35,6 +35,9 @@ small {
     font-style: italic;
     margin-top: 4em;
 }
+li.none {
+    list-style-type: none;
+}
 {% end %}
 
 
@@ -46,50 +49,43 @@ p(author). Colin MacDonald
 
 
 h1. Where we're going
-{% step %}
+* Small but useful projects
 * Thinking in Erlang
-*(step) Idioms/patterns
-*(step) Small but useful projects
-{% end %}
+* Idioms/design patterns
 
 
 h1. "Synergistic Weirdness"
 
 
 h1. Weirdness - missing stuff
-{% step %}
 * Mutable variables
-*(step) Loop controls (for, while)
-*(step) Objects
-{% end %}
+* Loop controls (for, while)
+* Objects
 
 
 h1. Weirdness - extra stuff
-% The Blub Paradox - Paul Graham - http://www.paulgraham.com/avg.html
-{% step %}
 * Pattern matching (and guard expressions)
-*(step) Recursion
-*(step) Inter-Process Communication/Messaging (IPC)
-{% end %}
+* Recursion
+* Inter-Process Communication/Messaging (IPC)
 
 
 h1. Synergistic Weirdness
-{% step %}
 * Pattern matching + immutability = clean & easy recursion
-**(step) All data are function params.
-*(step) Pattern matching -> clean & easy IPC message handling
-*(step) Recursion + IPC = safe mutable resources
-**(step) Processes own data, not vice-versa
-{% end %}
+* Pattern matching -> clean & easy IPC message handling
+* Recursion + IPC = safe mutable resources
+
+
+h1. Synergistic Weirdness
+
+Not rocket science, just different idioms
 
 
 h1. Recursion is Cheap, Clean, & Easy
-{% step %}
 * Use it for _everything_
-*(step) Replaces iteration
-*(step) Pattern matching functions replace conditionals
-*(step) Standard idioms
-{% end %}
+* All data are function params
+* Replaces iteration
+* Pattern matching functions replace conditionals
+* Standard idioms
 
 
 h1. Recursion
@@ -155,11 +151,9 @@ func([First | Rest], Output) ->
 
 
 h1. Digression: Backwards Lists
-{% step %}
-* *Q:* What's up with that?
-*(step) *A:* Both immutable and efficiently extensible
-**(step) Hint: _singly_ linked lists
-{% end %}
+*(none) *Q:* What's up with that?
+*(none) *A:* Both immutable and efficiently extensible
+**(none) Hint: _singly_ linked lists
 
 
 h1. Digression: Backwards Lists
@@ -206,14 +200,12 @@ elephant - monkey - cat - dog
 
 
 h1. Back to recursion: Bowling Game
-{% step %}
 * Calculate score for a bowling game.
-*(step) Input is a list of rolls
-*(step) Output is a number - the final score
-*(step) Need to keep track of frame numbers - not fixed number of rolls
-*(step) Frame score may depend on other frames
-**(step) _OO metaphor shear_
-{% end %}
+* Input is a list of rolls
+* Output is a number - the final score
+* Need to keep track of frame numbers - not fixed number of rolls
+* Frame score may depend on other frames
+** _OO metaphor shear_
 
 
 h1. Bowling Game
@@ -251,8 +243,8 @@ score(Rolls) ->
 score(_Rolls, 11, Score) -> Score;
 
  %% Middle
-score([First, Second | Rest], Frame, Score) ->
-    NewScore = Score + First + Second,
+score([Roll1, Roll2 | Rest], Frame, Score) ->
+    NewScore = Score + Roll1 + Roll2,
     score(Rest, Frame + 1, NewScore).
 {% end %}
 
@@ -272,12 +264,12 @@ score([10 | Rest], Frame, Score) ->
     ...
 
  %% Spare
-score([First, Second | Rest], Frame, Score) when First + Second == 10 ->
+score([Roll1, Roll2 | Rest], Frame, Score) when Roll1 + Roll2 == 10 ->
     ...
 
  %% Normal
-score([First, Second | Rest], Frame, Score) ->
-    NewScore = Score + First + Second,
+score([Roll1, Roll2 | Rest], Frame, Score) ->
+    NewScore = Score + Roll1 + Roll2,
     score(Rest, Frame + 1, NewScore).
 {% end %}
 
@@ -299,28 +291,28 @@ score([10 | Rest], Frame, Score) ->
     score(Rest, Frame + 1, NewScore);
 
  %% Spare
-score([First, Second | Rest], Frame, Score) when First + Second == 10 ->
+score([Roll1, Roll2 | Rest], Frame, Score) when Roll1 + Roll2 == 10 ->
     [Bonus1 | _] = Rest,
     NewScore = Score + 10 + Bonus1,
     score(Rest, Frame + 1, NewScore);
 
  %% Normal
-score([First, Second | Rest], Frame, Score) ->
-    NewScore = Score + First + Second,
+score([Roll1, Roll2 | Rest], Frame, Score) ->
+    NewScore = Score + Roll1 + Roll2,
     score(Rest, Frame + 1, NewScore).
 {% end %}
 
 
 h1. Bowling Game
 
-h3. What about incomplete games?
+What about incomplete games?
 
 
 h1. Bowling Game
 
-h3. What about incomplete games?
+What about incomplete games?
 
-h3. Several revisions later...
+Several revisions later...
 
 
 h1. Bowling Game
@@ -333,22 +325,22 @@ score(_Rolls, 11, Score) -> Score;
 score([10 | Rest], Frame, Score) ->
     score(Rest, Frame + 1, Score + 10 + strike_bonus(Rest));
 
-score([First, Second | Rest], Frame, Score) when (First + Second == 10) ->
+score([Roll1, Roll2 | Rest], Frame, Score) when (Roll1 + Roll2 == 10) ->
     score(Rest, Frame + 1, Score + 10 + spare_bonus(Rest));
 
-score([First, Second | Rest], Frame, Score) ->
-    score(Rest, Frame + 1, Score + First + Second);
+score([Roll1, Roll2 | Rest], Frame, Score) ->
+    score(Rest, Frame + 1, Score + Roll1 + Roll2);
 
-score([First], _Frame, Score) -> Score + First;
+score([Roll1], _Frame, Score) -> Score + Roll1;
 score([], _Frame, Score) -> Score.
 
 
 spare_bonus([]) -> 0;
-spare_bonus([First | _Rest]) -> First.
+spare_bonus([Bonus1 | _Rest]) -> Bonus1.
 
 strike_bonus([]) -> 0;
 strike_bonus([Only]) -> Only;
-strike_bonus([First, Second | _Rest]) -> First + Second.
+strike_bonus([Bonus1, Bonus2 | _Rest]) -> Bonus1 + Bonus2.
 {% end %}
 
 
@@ -503,7 +495,7 @@ Next> colin 4
 Normally, you'd start iterating at this point...
 
 
-h1. Immutability + Recursion
+h1. Recurse!
 {% code lang=erlang line_numbers=false %}
 loop(GameData) ->
     Line = io:get_line("Next> "),
@@ -525,413 +517,17 @@ h1. Escript kicks it off
 
 main([]) ->
     loop(dict:new()).
+
+loop(GameData) ->
+    ...
 {% end %}
 
 
-h1. Mutable data structures?
-{% code lang=erlang line_numbers=false %}
-> S = kvstore:init().
-{% end %}
-
-
-h1. Mutable data structures?
-{% code lang=erlang line_numbers=false %}
-> S = kvstore:init().
-> kvstore:append(foo, bar, S). 
-{% end %}
-
-
-h1. Mutable data structures?
-{% code lang=erlang line_numbers=false %}
-> S = kvstore:init().
-> kvstore:append(foo, bar, S). 
-> kvstore:find(foo, S).    
-[bar]
-{% end %}
-
-
-h1. Mutable data structures?
-{% code lang=erlang line_numbers=false %}
-> S = kvstore:init().
-> kvstore:append(foo, bar, S). 
-> kvstore:find(foo, S).    
-[bar]
-> kvstore:append(foo, baz, S).
-{% end %}
-
-
-h1. Mutable data structures?
-{% code lang=erlang line_numbers=false %}
-> S = kvstore:init().
-> kvstore:append(foo, bar, S). 
-> kvstore:find(foo, S).    
-[bar]
-> kvstore:append(foo, baz, S).
-> kvstore:find(foo, S).    
-[bar,baz]
-{% end %}
-
-
-h1. How do we do that?
-{% step %}
-_Again, there's a pattern..._
-*(step) Spin off a process to manage the data
-*(step) Send messages to interact with that process
-*(step) Wrap that in a client API
-*(step) Write the event handler
-{% end %}
-
-
-h1. Spin off data manager process
-{% code lang=erlang line_numbers=false %}
-init() ->
-    Data = dict:new(),
-    Start = fun() -> loop(Data) end,
-    spawn(Start).
-{% end %}
-Returns a PID so you can send messages to loop/1.
-
-
-h1. Spin off data manager process
-{% code lang=erlang line_numbers=false %}
-init() ->
-    Data = dict:new(),
-    Start = fun() -> loop(Data) end,
-    spawn(Start).
-{% end %}
-Returns a PID so you can send messages to loop/1.
-{% code lang=erlang line_numbers=false %}
-1> S = kvstore:init().
-<0.34.0>
-{% end %}
-
-
-h1. Provide a client API
-
-_Send messages to the loop/1 process_
-{% code lang=erlang line_numbers=false %}
-find(Key, StorePid) ->
-    MyPid = self(),
-    Req = {find, Key},
-    StorePid ! {MyPid, Req},
-    receive Resp -> Resp end.
-{% end %}
-Returns whatever loop/1 responds with.
-
-
-h1. Provide a client API
-
-_Send messages to the loop/1 process_
-{% code lang=erlang line_numbers=false %}
-find(Key, StorePid) ->
-    MyPid = self(),
-    Req = {find, Key},
-    StorePid ! {MyPid, Req},
-    receive Resp -> Resp end.
-{% end %}
-Returns whatever loop/1 responds with.
-{% code lang=erlang line_numbers=false %}
-2> kvstore:find(foo, S).
-[]
-{% end %}
-
-
-h1. Provide a client API
-
-_Send messages to the loop/1 process_
-{% code lang=erlang line_numbers=false %}
-find(Key, StorePid) ->
-    MyPid = self(),
-    Req = {find, Key},
-    StorePid ! {MyPid, Req},
-    receive Resp -> Resp end.
-
-append(Key, Value, StorePid) ->
-    MyPid = self(),
-    Req = {append, Key, Value},
-    StorePid ! {MyPid, Req},
-    receive Resp -> Resp end.
-{% end %}
-
-
-h1. Provide a client API
-
-_Send messages to the loop/1 process_
-{% code lang=erlang line_numbers=false %}
-find(Key, StorePid) ->
-    MyPid = self(),
-    Req = {find, Key},
-    StorePid ! {MyPid, Req},
-    receive Resp -> Resp end.
-
-append(Key, Value, StorePid) ->
-    MyPid = self(),
-    Req = {append, Key, Value},
-    StorePid ! {MyPid, Req},
-    receive Resp -> Resp end.
-{% end %}
-
-{% code lang=erlang line_numbers=false %}
-3> kvstore:append(foo, bar, S).
-ok
-4> kvstore:find(foo, S).
-[bar]
-{% end %}
-
-
-h1. Write the event handler
-{% code lang=erlang line_numbers=false %}
-loop(Dict) ->
-    receive
-        {From, {find, Key}} ->
-            % handle find
-        {From, {append, Key, Value}} ->
-            % handle append
-    end.
-{% end %}
-
-
-h1. Write the event handler
-{% code lang=erlang line_numbers=false %}
-loop(Dict) ->
-    receive
-        {From, {find, Key}} ->
-            % Get key value from Dict
-            % Respond with value
-            % Recurse!
-        {From, {append, Key, Value}} ->
-            % Add new value to key in Dict
-            % Respond with ok
-            % Recurse with new Dict
-    end.
-{% end %}
-
-
-h1. Write the event handler
-{% code lang=erlang line_numbers=false %}
-loop(Dict) ->
-    receive
-        {From, {find, Key}} ->
-            Value = dict_find(Key, Dict),
-            From ! Value,
-            loop(Dict);
-        {From, {append, Key, Value}} ->
-            NewDict = dict:append(Key, Value, Dict),
-            From ! ok,
-            loop(NewDict)  % updated dictionary!
-    end.
-{% end %}
-
-
-h1. Write the event handler
-{% code lang=erlang line_numbers=false %}
-loop(Dict) ->
-    receive
-        {From, {find, Key}} ->
-            Value = dict_find(Key, Dict),
-            From ! Value,
-            loop(Dict);
-        {From, {append, Key, Value}} ->
-            NewDict = dict:append(Key, Value, Dict),
-            From ! ok,
-            loop(NewDict)  % updated dictionary!
-    end.
-
-dict_find(Key, Dict) ->
-    case dict:find(Key, Dict) of
-        {ok, Value} -> Value;
-        error -> []
-    end.
-{% end %}
-
-
-h1. Road test it!
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> S = kvstore:init().
-<0.34.0>
-{% end %}
-
-
-h1. Road test it!
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> S = kvstore:init().
-<0.34.0>
-2> kvstore:find(foo, S).
-[]
-{% end %}
-
-
-h1. Road test it!
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> S = kvstore:init().
-<0.34.0>
-2> kvstore:find(foo, S).
-[]
-3> kvstore:append(foo, bar, S).
-ok
-{% end %}
-
-
-h1. Road test it!
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> S = kvstore:init().
-<0.34.0>
-2> kvstore:find(foo, S).
-[]
-3> kvstore:append(foo, bar, S).
-ok
-4> kvstore:append(foo, baz, S).
-ok
-{% end %}
-
-
-h1. Road test it!
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> S = kvstore:init().
-<0.34.0>
-2> kvstore:find(foo, S).
-[]
-3> kvstore:append(foo, bar, S).
-ok
-4> kvstore:append(foo, baz, S).
-ok
-5> kvstore:find(foo, S).       
-[bar,baz]
-{% end %}
-
-
-h1. Is that some crazy over-designing or what?
-
-
-h1. Is that some crazy over-designing or what?
-
-Know what a file handle looks like?
-
-
-h1. Is that some crazy over-designing or what?
-
-Know what a file handle looks like?
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> file:open("foo.txt", [write]).
-{ok,<0.36.0>}
-{% end %}
-
-
-h1. Is that some crazy over-designing or what?
-
-Know what a file handle looks like?
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> file:open("foo.txt", [write]).
-{ok,<0.36.0>}
-{% end %}
-This is just how Erlang does things.
-
-
-h1. Is that some crazy over-designing or what?
-
-Know what a file handle looks like?
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> file:open("foo.txt", [write]).
-{ok,<0.36.0>}
-{% end %}
-This is just how Erlang does things.
-
-_p.s. The version of the key-value store in_ Erlang and OTP In Action _uses a separate process for each key!_
-
-
-h1. Mash-up!
+h1. Webify!
 * Simple web app
-* Modify the key-value store to keep score in a bowling game
 * Single page sends Ajax REST requests, updates itself
 * Uses the Spooky web framework & jQuery
-
-h1. Modify 'append' handler to return score
-{% code lang=erlang line_numbers=false %}
-        {From, {append, Key, Value}} ->
-            NewDict = dict:append(Key, Value, Dict),
-            From ! ok,
-            loop(NewDict)  % updated dictionary
-{% end %}
-_becomes..._
-{% code lang=erlang line_numbers=false %}
-        {From, {append, Key, Value}} ->
-            NewDict = dict:append(Key, Value, Dict),
-
-            Rolls = dict_find(Key, NewDict),
-            Score = bowling_game:score(Rolls),
-            From ! Score,
-
-            loop(NewDict)  % updated dictionary
-{% end %}
-'find' handler not used.
-
-
-h1. Test drive
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-> S = bowling_store:init().
-<0.34.0>
-{% end %}
-
-
-h1. Test drive
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-> S = bowling_store:init().
-<0.34.0>
-> bowling_store:append(colin, 3, S).
-3
-{% end %}
-
-
-h1. Test drive
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-> S = bowling_store:init().
-<0.34.0>
-> bowling_store:append(colin, 3, S).
-3
-> bowling_store:append(colin, 4, S).
-7
-{% end %}
-
-
-h1. Test drive
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-> S = bowling_store:init().
-<0.34.0>
-> bowling_store:append(colin, 3, S).
-3
-> bowling_store:append(colin, 4, S).
-7
-> bowling_store:append(colin, 10, S).
-17
-{% end %}
-
-
-h1. Test drive
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-> S = bowling_store:init().
-<0.34.0>
-> bowling_store:append(colin, 3, S).
-3
-> bowling_store:append(colin, 4, S).
-7
-> bowling_store:append(colin, 10, S).
-17
-> bowling_store:append(colin, 4, S). 
-25
-{% end %}
+* Spin off a process to manage the data (bowling_store)
 
 
 h1. REST API
@@ -945,7 +541,7 @@ pre. http://localhost:8000/add/colin/4
 <small>Yes, I'm modifying state with a GET. Shhh...</small>
 
 
-h1. Web app
+h1. Spooky App
 {% code lang=erlang line_numbers=false %}
 -module(bowling_web).
 -behaviour(spooky).
@@ -954,7 +550,7 @@ h1. Web app
 {% end %}
 
 
-h1. Web app
+h1. Spooky App
 {% code lang=erlang line_numbers=false %}
 -module(bowling_web).
 -behaviour(spooky).
@@ -967,7 +563,7 @@ init([])->
 {% end %}
 
 
-h1. Web app
+h1. Spooky App
 {% code lang=erlang line_numbers=false %}
 -module(bowling_web).
 -behaviour(spooky).
@@ -983,7 +579,7 @@ get(_Req, ["add", Player, RollText])->
 {% end %}
 
 
-h1. Web app
+h1. Spooky App
 {% code lang=erlang line_numbers=false %}
 -module(bowling_web).
 -behaviour(spooky).
@@ -995,13 +591,12 @@ init([])->
     [{port, 8000}].
 
 get(_Req, ["add", Player, RollText])->
-    {Roll, _} = string:to_integer(RollText),
-    Score = bowling_store:append(Player, Roll, store),
+    Score = bowling_store:append(Player, RollText, store),
     {200, io_lib:format("~p", [Score])};
 {% end %}
 
 
-h1. Web app
+h1. Spooky App
 {% code lang=erlang line_numbers=false %}
 -module(bowling_web).
 -behaviour(spooky).
@@ -1013,8 +608,7 @@ init([])->
     [{port, 8000}].
 
 get(_Req, ["add", Player, RollText])->
-    {Roll, _} = string:to_integer(RollText),
-    Score = bowling_store:append(Player, Roll, store),
+    Score = bowling_store:append(Player, RollText, store),
     {200, io_lib:format("~p", [Score])};
 
 get(Req, [])-> get(Req, ["form.html"]);  % main page
@@ -1028,15 +622,130 @@ get(_Req, Path)->  % other static resources
 {% end %}
 
 
+h1. Bowling Store
+
+Remember the command-line loop?
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    Line = io:get_line("Next> "),
+    [Player, RollText] = string:tokens(Line, " \t\n"),
+
+    {Roll, _} = string:to_integer(RollText),
+    NewGameData = dict:append(Player, Roll, GameData),
+    {ok, Rolls} = dict:find(Player, NewGameData).
+    Score = bowling_game:score(Rolls).
+
+    io:format("New score for ~s: ~p~n", [Player, Score]),
+    loop(NewGameData).
+{% end %}
+
+
+h1. Bowling Store
+
+Here's the request-handling loop.
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    receive {From, {append, Player, RollText}} ->
+
+        {Roll, _} = string:to_integer(RollText),
+        NewGameData = dict:append(Player, Roll, GameData),
+        {ok, Rolls} = dict:find(Player, NewGameData),
+        Score = bowling_game:score(Rolls),
+
+        From ! Score,
+        loop(NewGameData)
+    end.
+{% end %}
+
+
+h1. Bowling Store
+
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    receive {From, {append, Player, RollText}} ->
+        {Roll, _} = string:to_integer(RollText),
+        NewGameData = dict:append(Player, Roll, GameData),
+        {ok, Rolls} = dict:find(Player, NewGameData),
+        Score = bowling_game:score(Rolls),
+        From ! Score,
+        loop(NewGameData)
+    end.
+
+init() ->
+    Data = dict:new(),
+    Start = fun() -> loop(Data) end,
+    spawn(Start).
+{% end %}
+
+
+h1. Bowling Store
+
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    receive {From, {append, Player, RollText}} ->
+        {Roll, _} = string:to_integer(RollText),
+        NewGameData = dict:append(Player, Roll, GameData),
+        {ok, Rolls} = dict:find(Player, NewGameData),
+        Score = bowling_game:score(Rolls),
+        From ! Score,
+        loop(NewGameData)
+    end.
+
+init() ->
+    Data = dict:new(),
+    Start = fun() -> loop(Data) end,
+    spawn(Start).
+
+append(Player, RollText, Pid) ->
+    Pid ! {self(), {append, Player, RollText}},
+    receive Resp -> Resp end.
+{% end %}
+
+
 h1. Run it!
 {% code lang=erlang line_numbers=false %}
 $ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
-Erlang R14B03 (erts-5.8.4) [source] [64-bit] [smp:4:4] [rq:4] [async-threads:0] [hipe] [kernel-poll:false]
-
+...
 Eshell V5.8.4  (abort with ^G)
 1> spooky:start_link(bowling_web).
 {ok,<0.35.0>}
 2> 
+{% end %}
+
+
+h1. Run it!
+{% code lang=erlang line_numbers=false %}
+$ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
+...
+Eshell V5.8.4  (abort with ^G)
+1> spooky:start_link(bowling_web).
+{ok,<0.35.0>}
+2> 
+{% end %}
+Of course, I got tired of typing all that.
+
+
+h1. ...with Escript!
+{% code lang=erlang line_numbers=false %}
+#!/usr/local/bin/escript
+
+main([]) ->
+    SpookyDir = os:getenv("SPOOKY_DIR"),
+    %% Add spooky and its dependencies to the code path.
+    true = code:add_path(SpookyDir ++ "/ebin"),
+    Deps = filelib:wildcard(SpookyDir ++ "/deps/*/ebin"),
+    ok = code:add_paths(Deps),
+
+    %% Compile our modules, just to be safe.
+    c:c(bowling_game),
+    c:c(bowling_store),
+    c:c(bowling_web),
+
+    spooky:start_link(bowling_web),
+    io:format("Started spooky~n"),
+
+    io:get_line("Return to exit...  "),
+    spooky:stop().
 {% end %}
 
 
@@ -1095,15 +804,13 @@ h1. Webapp interaction
 !slide_images/bowling_app_7.png(add/colin/3)!
 
 
-h1. Extra credit: Web tests
+h1. Extra credit: Automate REST tests
 
 Hit a REST URL, check value returned
-{% step %}
-* http://localhost:8000/add/colin/3 -> 3
-*(step) http://localhost:8000/add/colin/4 -> 7
-*(step) http://localhost:8000/add/colin/10 -> 17
-*(step) http://localhost:8000/add/colin/3 -> 23
-{% end %}
+# http://localhost:8000/add/colin/3 -> 3
+# http://localhost:8000/add/colin/4 -> 7
+# http://localhost:8000/add/colin/10 -> 17
+# http://localhost:8000/add/colin/3 -> 23
 
 
 h1. Define test data
@@ -1205,19 +912,17 @@ test([{Player, Roll, Expected} | Tests], Passed, Failed) ->
 
 h1. Run it!
 {% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> spooky:start_link(bowling_web).
-{ok,<0.35.0>}
-2>
+$ ./start_server.erl 
+Started spooky
+Return to exit...  
 {% end %}
 
 
 h1. Run it!
 {% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> spooky:start_link(bowling_web).
-{ok,<0.35.0>}
-2>
+$ ./start_server.erl 
+Started spooky
+Return to exit...  
 {% end %}
 
 {% code lang=bash line_numbers=false %}
@@ -1228,10 +933,9 @@ $ ./web_test.erl
 
 h1. Run it!
 {% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> spooky:start_link(bowling_web).
-{ok,<0.35.0>}
-2>
+$ ./start_server.erl 
+Started spooky
+Return to exit...  
 {% end %}
 
 {% code lang=bash line_numbers=false %}
@@ -1240,31 +944,31 @@ $ ./web_test.erl
 {% end %}
 _Add some debugging to bowling_web.erl, and you'll see..._
 {% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> spooky:start_link(bowling_web).
-{ok,<0.35.0>}
-Add 3 for colin
-Add 4 for colin
-Add 10 for colin
-Add 3 for colin
-2> 
+$ ./start_server.erl 
+Started spooky
+Return to exit...  Add 3 for colin
+Return to exit...  Add 4 for colin
+Return to exit...  Add 10 for colin
+Return to exit...  Add 3 for colin
+Return to exit...  
 {% end %}
 
 
 h1. Wrap-up
-{% step %}
 * Synergistic Weirdness
-*(step) Patterns of use
-*(step) Think small
-{% end %}
+* Idioms for recursion & message handling
+* Escript for CLI
+* Spooky Webapps
+* Think small, have fun!
 
 
 h1. Crafty Erlang
 
+* https://bluegraybox.github.com/Crafty-Erlang - _presentation_
+* https://github.com/bluegraybox/Crafty-Erlang - _S9 slideshow & actual code modules_
+
 Colin MacDonald
 * colin@bluegraybox.com
-* http://www.bluegraybox.com/blog/
-* https://github.com/bluegraybox
-* https://github.com/bluegraybox/Crafty-Erlang
-** _S9 slideshow & actual code modules_
+* bluegraybox.com/blog
+* github.com/bluegraybox
 

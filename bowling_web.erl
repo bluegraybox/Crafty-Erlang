@@ -9,8 +9,7 @@ init([])->
 
 get(_Req, ["add", Player, RollText])->
     io:format("Add ~s for ~s~n", [RollText, Player]),
-    {Roll, _} = string:to_integer(RollText),
-    Score = bowling_store:append(Player, Roll, store),
+    Score = bowling_store:append(Player, RollText, store),
     {200, io_lib:format("~p", [Score])};
 
 get(Req, [])-> get(Req, ["form.html"]);  % main page

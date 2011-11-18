@@ -23,5 +23,6 @@ main([SpookyDir]) ->
     io:format("Started spooky~n"),
 
     io:get_line("Return to exit...  "),
-    spooky:stop().
+    spooky:stop(),
+    io:format("Stopped spooky~n").
 
