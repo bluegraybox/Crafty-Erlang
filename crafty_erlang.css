@@ -123,3 +123,7 @@ small {
 li.none {
     list-style-type: none;
 }
+a:link, a:visited {
+    color: grey;
+    text-decoration: none;
+}
