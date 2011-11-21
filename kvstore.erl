@@ -39,12 +39,13 @@ find(Key, Pid) ->
 
 test() ->
     Pid = init(),
-    [] = find(foo, Pid),
+    [] = find(foo, Pid),  % key has no entries initially
     ok = append(foo, bar, Pid),
     [bar] = find(foo, Pid),
     ok = append(foo, baz, Pid),
-    [bar, baz] = find(foo, Pid),
+    [bar, baz] = find(foo, Pid),  % entries append, rather than replace
+    [] = find(bar, Pid),  % second key is not connected to first
     Pid2 = init(),
-    [] = find(foo, Pid2),
+    [] = find(foo, Pid2),  % second store is unconnected to first
     ok.
 
