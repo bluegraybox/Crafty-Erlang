@@ -128,7 +128,7 @@ h1. Digression: Backwards Lists
 
 {% code lang=erlang line_numbers=false %}
 Foo = [cat, dog].
-Bar = [monkey|Foo].
+Bar = [monkey | Foo].
 {% end %}
 
 {% step %}
@@ -143,14 +143,16 @@ h1. Digression: Backwards Lists
 
 {% code lang=erlang line_numbers=false %}
 Foo = [cat, dog].
-Bar = [monkey|Foo].
-Baz = [elephant|Bar].
+Bar = [monkey | Foo].
+Baz = [elephant, tiger | Foo].
 {% end %}
 
 {% step %}
 pre. Baz        Bar      Foo
 |          |        |
-elephant - monkey - cat - dog
+|          monkey - cat - dog
+|                 /
+elephant - tiger /
 {% end %}
 
 
