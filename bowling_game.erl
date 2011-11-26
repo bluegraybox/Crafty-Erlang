@@ -23,6 +23,5 @@ spare_bonus([Bonus1 | _Rest]) -> Bonus1.
 
 strike_bonus([]) -> 0;
 strike_bonus([Only]) -> Only;
-strike_bonus([10, Bonus2 | _Rest]) -> 10 + Bonus2;
 strike_bonus([Bonus1, Bonus2 | _Rest]) -> Bonus1 + Bonus2.
 

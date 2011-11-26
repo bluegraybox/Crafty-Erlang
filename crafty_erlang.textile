@@ -33,7 +33,13 @@ small {
 .author {
     color: grey;
     font-style: italic;
-    margin-top: 4em;
+    margin-top: 6em;
+}
+table.author td {
+    padding-left: 4em;
+}
+table.author td:first-child {
+    padding-left: 0;
 }
 li.none {
     list-style-type: none;
@@ -775,12 +781,12 @@ h1. REST interaction
 
 h1. Webapp interaction
 
-!slide_images/bowling_app_1.png(add/colin/3)!
+!slide_images/bowling_app_1.png(/)!
 
 
 h1. Webapp interaction
 
-!slide_images/bowling_app_2.png(add/colin/3)!
+!slide_images/bowling_app_2.png(add player - client side)!
 
 
 h1. Webapp interaction
@@ -795,12 +801,12 @@ h1. Webapp interaction
 
 h1. Webapp interaction
 
-!slide_images/bowling_app_5.png(add/colin/3)!
+!slide_images/bowling_app_5.png(add/colin/4)!
 
 
 h1. Webapp interaction
 
-!slide_images/bowling_app_6.png(add/colin/3)!
+!slide_images/bowling_app_6.png(add/colin/10)!
 
 
 h1. Webapp interaction
@@ -959,20 +965,27 @@ Return to exit...
 
 
 h1. Wrap-up
-* Synergistic Weirdness
-* Idioms for recursion & message handling
-* Escript for CLI
-* Spooky Webapps
-* Think small, have fun!
+* Weirdness
+* Idioms
+* Escript
+* Webapps
+
+
+h1. Bonus Materials
+*(none) "bluegraybox.github.com/Crafty-Erlang":http://bluegraybox.github.com/Crafty-Erlang
+** Presentation
+
+*(none) "github.com/bluegraybox/Crafty-Erlang":http://github.com/bluegraybox/Crafty-Erlang
+** S9 slideshow
+** Example source
 
 
 h1. Crafty Erlang
 
-* "bluegraybox.github.com/Crafty-Erlang":http://bluegraybox.github.com/Crafty-Erlang - _presentation_
-* "github.com/bluegraybox/Crafty-Erlang":http://github.com/bluegraybox/Crafty-Erlang - _S9 slideshow & actual code modules_
+h3. Think small, have fun!
 
-Colin MacDonald
-* "colin@bluegraybox.com":mailto:colin@bluegraybox.com
-* "bluegraybox.com/blog":http://bluegraybox.com/blog
-* "github.com/bluegraybox":http://github.com/bluegraybox
+table(author).
+| Colin MacDonald | "colin@bluegraybox.com":mailto:colin@bluegraybox.com |
+|| "bluegraybox.com/blog":http://bluegraybox.com/blog |
+|| "github.com/bluegraybox":http://github.com/bluegraybox |
 

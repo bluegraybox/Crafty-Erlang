@@ -1,0 +1,212 @@
+h1. Crafty Erlang
+
+    Small but useful projects
+    Thinking in Erlang
+    Idioms/design patterns
+
+
+h1. "Synergistic Weirdness"
+
+    Weirdness - missing stuff
+        "I need to write a for loop to iterate over a list of objects and update them"
+        Mutable variables
+        Loop controls (for, while)
+        Objects
+
+    Weirdness - extra stuff
+        Pattern matching (and guard expressions)
+        Recursion
+        Inter-Process Communication/Messaging (IPC)
+
+    Synergistic Weirdness
+        Pattern matching + immutability = clean & easy recursion
+        Pattern matching -> clean & easy IPC message handling
+        Recursion + IPC = safe mutable resources
+
+
+h1. Synergistic Weirdness
+
+    Not rocket science, just different idioms
+
+
+h1. Recursion
+
+    Recursion is Cheap, Clean, & Easy
+        Use it for _everything_
+        All data are function params
+        Replaces iteration
+        Pattern matching functions replace conditionals
+        Standard idioms
+
+
+    Pattern
+        beginning
+        end
+        middle
+
+
+h1. Recursion
+
+    Simple case: list munging
+        beginning
+        end
+        middle: n -> n+1
+
+
+h1. Digression: Backwards Lists
+    Q: What's up with that?
+    A: Both immutable and efficiently extensible
+    Hint: _singly_ linked lists
+
+
+h1. Digression: Backwards Lists
+    Foo
+    Bar
+    Baz
+
+
+h1. Back to recursion: Bowling Game
+    Calculate score for a bowling game.
+    Input is a list of rolls
+    Output is a number - the final score
+    Need to keep track of frame numbers - not fixed number of rolls
+    Frame score may depend on other frames
+        _OO metaphor shear_
+
+
+h1. Bowling Game
+
+    beginning
+    end
+    middle (normal)
+    middle (strike & spare)
+    middle (strike & spare details)
+    incomplete games?
+    final
+    Ok, that's an algorithm
+        To make it useful, we need to add
+        * interface
+        * storage (mutable!)
+
+
+h1. Sketching the CLI
+
+    io:get_line
+    example input
+    string:tokens - like split
+    string:to_integer
+    dict:new
+    dict:append
+    dict:find
+    bowling_game:score
+        Normally, you'd start iterating at this point...
+
+
+h1. Recurse!
+    loop with updated GameData
+    recursion makes variable scoping clear
+    this is the middle part of the recursion
+
+h1. Escript kicks it off
+    this is the beginning of the recursion
+    no end; ctrl-c out
+    we'll call the CLI done, now Webify!
+        Simple web app
+        Single page sends Ajax REST requests, updates itself
+        Uses the Spooky web framework & jQuery
+        Spin off a process to manage the data (bowling_store)
+
+
+h1. REST API
+
+    Yes, I'm modifying state with a GET. Shhh...
+
+
+h1. Spooky App
+    header
+        behavior - like "implements"
+        import as-yet-unwritten bowling_store
+    init
+        bowling_store is service
+        sounds heavyweight, but isn't
+    get
+        Spooky splits url path into list
+    get (full)
+    get (static)
+        get base url returns page
+        otherwise, relative path to resource
+
+
+h1. Bowling Store
+
+    command-line loop: read, process, write, recurse
+    request-handling loop: receive, process, respond, recurse
+        same amount of work (maybe less!)
+    init: beginning
+        take original loop(Data), wrap in closure, spawn
+    append: API
+        so client doesn't have to know about IPC
+
+
+h1. Run it!
+
+    run from erl command line
+        Of course, I got tired of typing all that.
+    run from Escript
+        add Spooky & dependencies to code path
+        compile our code, too
+
+
+h1. REST interaction
+
+    quick test from the browser
+        3, 4, 10, 3
+
+
+h1. Webapp interaction
+
+    base page
+    add player - all client side
+    3 - pre
+        3, 4, 10, 3
+
+
+h1. Extra credit: Automate REST tests
+
+    Command-line script, hits REST service
+    Define test data
+        external file, just to show how it's done
+    Load test data from file
+        io:read parses straight into Erlang data structure (Term)
+    Make REST call
+        format URL, make request
+        pull Content out of nested tuple structure
+    Recurse through tests - main
+        inets:start sets up http client
+        beginning of recursion
+    Recurse through tests - test end
+        two end cases: no fails, any fails=fail
+    Recurse through tests - test middle
+        recurse with either pass or fail incremented
+
+
+h1. Run it!
+    start_server
+    web_test
+    start_server w/ debugging
+
+
+h1. Wrap-up
+    Synergistic Weirdness
+    Design patterns for recursion & message handling
+    Escript for CLI
+    Spooky Webapps
+    Think small, have fun!
+
+
+h1. Bonus Materials
+    Full versions of scripts (with error handling)
+    Unit tests
+    presentation
+    S9 slideshow
+
