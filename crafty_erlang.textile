@@ -58,31 +58,7 @@ h3. An elegant language for small projects
 p(author). Colin MacDonald
 
 
-h1. Where we're going
-* Small but useful projects
-* Thinking in Erlang
-* Idioms/design patterns
-
-
-h1. "Synergistic Weirdness"
-
-
-h1. Weirdness - missing stuff
-* Mutable variables
-* Loop controls (for, while)
-* Objects
-
-
-h1. Weirdness - extra stuff
-* Pattern matching (and guard expressions)
-* Recursion
-* Inter-Process Communication/Messaging (IPC)
-
-
 h1. Synergistic Weirdness
-* Pattern matching + immutability = clean & easy recursion
-* Pattern matching -> clean & easy IPC message handling
-* Recursion + IPC = safe mutable resources
 
 
 h1. Synergistic Weirdness
@@ -90,26 +66,13 @@ h1. Synergistic Weirdness
 Not rocket science, just different idioms
 
 
-h1. Recursion is Cheap, Clean, & Easy
-* Use it for _everything_
-* All data are function params
-* Replaces iteration
-* Pattern matching functions replace conditionals
-* Standard idioms
+h1. Recursion
 
 
 h1. Recursion
-* beginning
-* end
-* middle
-
-
-h1. Recursion
-
-Simple case: list munging
-* beginning
-
 {% code lang=erlang line_numbers=false %}
+% Need to put a space before comments, or Slideshow treats them as its own comments
+ %% beginning
 func(Input) ->
     Output = [],
     func(Input, Output).
@@ -117,43 +80,28 @@ func(Input) ->
 
 
 h1. Recursion
-
-Simple case: list munging
-* beginning
-
 {% code lang=erlang line_numbers=false %}
+ %% beginning
 func(Input) ->
     Output = [],
     func(Input, Output).
-{% end %}
 
-* end
-
-{% code lang=erlang line_numbers=false %}
+ %% end
 func([], Output) -> lists:reverse(Output).
 {% end %}
 
 
 h1. Recursion
-
-Simple case: list munging
-* beginning
-
 {% code lang=erlang line_numbers=false %}
+ %% beginning
 func(Input) ->
     Output = [],
     func(Input, Output).
-{% end %}
 
-* end
-
-{% code lang=erlang line_numbers=false %}
+ %% end
 func([], Output) -> lists:reverse(Output).
-{% end %}
 
-* middle
-
-{% code lang=erlang line_numbers=false %}
+ %% middle
 func([First | Rest], Output) ->
     NewFirst = munge(First),
     func(Rest, [NewFirst | Output]);
@@ -161,9 +109,6 @@ func([First | Rest], Output) ->
 
 
 h1. Digression: Backwards Lists
-*(none) *Q:* What's up with that?
-*(none) *A:* Both immutable and efficiently extensible
-**(none) Hint: _singly_ linked lists
 
 
 h1. Digression: Backwards Lists
@@ -210,18 +155,11 @@ elephant - monkey - cat - dog
 
 
 h1. Back to recursion: Bowling Game
-* Calculate score for a bowling game.
-* Input is a list of rolls
-* Output is a number - the final score
-* Need to keep track of frame numbers - not fixed number of rolls
-* Frame score may depend on other frames
-** _OO metaphor shear_
 
 
 h1. Bowling Game
 
 {% code lang=erlang line_numbers=false %}
-% Need to put a space before comments, or Slideshow treat them as its own comments
  %% Beginning: score/1 -> score/3
 score(Rolls) ->
     Frame = 1,
@@ -320,13 +258,6 @@ What about incomplete games?
 
 h1. Bowling Game
 
-What about incomplete games?
-
-Several revisions later...
-
-
-h1. Bowling Game
-
 {% code lang=erlang line_numbers=false %}
 score(Rolls) -> score(Rolls, 1, 0).
 
@@ -355,10 +286,6 @@ strike_bonus([Bonus1, Bonus2 | _Rest]) -> Bonus1 + Bonus2.
 
 
 h1. Ok, that's an algorithm
-
-To make it useful, we need to add
-* interface
-* storage (mutable!)
 
 
 h1. Sketching the CLI
@@ -482,29 +409,6 @@ Next> colin 4
 {% end %}
 
 
-h1. Sketching the CLI
-
-{% code lang=erlang line_numbers=false %}
-Eshell V5.8.4  (abort with ^G)
-1> Line = io:get_line("Next> ").
-Next> colin 4
-"colin 4\n"
-2> [Player, RollText] = string:tokens(Line, " \t\n").
-["colin","4"]
-3> {Roll, _} = string:to_integer(RollText).
-{4,[]}
-4> GameData = dict:new().
-{dict,0,...
-5> NewGameData = dict:append(Player, Roll, GameData).
-{dict,1,...
-6> {ok, Rolls} = dict:find(Player, NewGameData).
-{ok,[4]}
-7> Score = bowling_game:score(Rolls).
-4
-{% end %}
-Normally, you'd start iterating at this point...
-
-
 h1. Recurse!
 {% code lang=erlang line_numbers=false %}
 loop(GameData) ->
@@ -534,10 +438,6 @@ loop(GameData) ->
 
 
 h1. Webify!
-* Simple web app
-* Single page sends Ajax REST requests, updates itself
-* Uses the Spooky web framework & jQuery
-* Spin off a process to manage the data (bowling_store)
 
 
 h1. REST API
@@ -547,8 +447,6 @@ pre. http://localhost:8000/add/Player/Roll
 e.g.
 
 pre. http://localhost:8000/add/colin/4
-
-<small>Yes, I'm modifying state with a GET. Shhh...</small>
 
 
 h1. Spooky App
@@ -622,6 +520,25 @@ get(_Req, ["add", Player, RollText])->
     {200, io_lib:format("~p", [Score])};
 
 get(Req, [])-> get(Req, ["form.html"]);  % main page
+{% end %}
+
+
+h1. Spooky App
+{% code lang=erlang line_numbers=false %}
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_store).
+
+init([])->
+    register(store, bowling_store:init()),
+    [{port, 8000}].
+
+get(_Req, ["add", Player, RollText])->
+    Score = bowling_store:append(Player, RollText, store),
+    {200, io_lib:format("~p", [Score])};
+
+get(Req, [])-> get(Req, ["form.html"]);  % main page
 
 get(_Req, Path)->  % other static resources
     Filename = filename:join(Path),
@@ -646,23 +563,26 @@ loop(GameData) ->
     Score = bowling_game:score(Rolls).
 
     io:format("New score for ~s: ~p~n", [Player, Score]),
+
     loop(NewGameData).
 {% end %}
 
 
 h1. Bowling Store
 
-Here's the request-handling loop.
+Here's the message-handling loop.
 {% code lang=erlang line_numbers=false %}
 loop(GameData) ->
     receive {From, {append, Player, RollText}} ->
 
+        %% This is the same
         {Roll, _} = string:to_integer(RollText),
         NewGameData = dict:append(Player, Roll, GameData),
         {ok, Rolls} = dict:find(Player, NewGameData),
         Score = bowling_game:score(Rolls),
 
         From ! Score,
+
         loop(NewGameData)
     end.
 {% end %}
@@ -721,18 +641,6 @@ Eshell V5.8.4  (abort with ^G)
 {ok,<0.35.0>}
 2> 
 {% end %}
-
-
-h1. Run it!
-{% code lang=erlang line_numbers=false %}
-$ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
-...
-Eshell V5.8.4  (abort with ^G)
-1> spooky:start_link(bowling_web).
-{ok,<0.35.0>}
-2> 
-{% end %}
-Of course, I got tired of typing all that.
 
 
 h1. ...with Escript!
@@ -815,12 +723,6 @@ h1. Webapp interaction
 
 
 h1. Extra credit: Automate REST tests
-
-Hit a REST URL, check value returned
-# http://localhost:8000/add/colin/3 -> 3
-# http://localhost:8000/add/colin/4 -> 7
-# http://localhost:8000/add/colin/10 -> 17
-# http://localhost:8000/add/colin/3 -> 23
 
 
 h1. Define test data
@@ -952,7 +854,7 @@ Return to exit...
 $ ./web_test.erl 
 ....Passed! (4 tests)
 {% end %}
-_Add some debugging to bowling_web.erl, and you'll see..._
+_Add debugging to server..._
 {% code lang=erlang line_numbers=false %}
 $ ./start_server.erl 
 Started spooky
@@ -973,19 +875,23 @@ h1. Wrap-up
 
 h1. Bonus Materials
 *(none) "bluegraybox.github.com/Crafty-Erlang":http://bluegraybox.github.com/Crafty-Erlang
-** Presentation
+** Presentation (GitHub Pages)
 
 *(none) "github.com/bluegraybox/Crafty-Erlang":http://github.com/bluegraybox/Crafty-Erlang
-** S9 slideshow
-** Example source
+** S9 markup
+** Full source
+
+*(none) "bluegraybox.com/blog":http://bluegraybox.com/blog
+** More essays & examples
 
 
 h1. Crafty Erlang
 
 h3. Think small, have fun!
 
-table(author).
-| Colin MacDonald | "colin@bluegraybox.com":mailto:colin@bluegraybox.com |
-|| "bluegraybox.com/blog":http://bluegraybox.com/blog |
-|| "github.com/bluegraybox":http://github.com/bluegraybox |
+p(author). Colin MacDonald<br>
+"colin@bluegraybox.com":mailto:colin@bluegraybox.com
+
+% table(author).
+% | Colin MacDonald | "colin@bluegraybox.com":mailto:colin@bluegraybox.com |
 

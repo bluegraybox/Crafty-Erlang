@@ -1,11 +1,11 @@
-h1. Crafty Erlang
+Crafty Erlang
 
     Small but useful projects
     Thinking in Erlang
     Idioms/design patterns
 
 
-h1. "Synergistic Weirdness"
+Synergistic Weirdness
 
     Weirdness - missing stuff
         "I need to write a for loop to iterate over a list of objects and update them"
@@ -24,20 +24,18 @@ h1. "Synergistic Weirdness"
         Recursion + IPC = safe mutable resources
 
 
-h1. Synergistic Weirdness
-
-    Not rocket science, just different idioms
+Synergistic Weirdness - Not rocket science
 
 
-h1. Recursion
+Recursion
 
     Recursion is Cheap, Clean, & Easy
         Use it for _everything_
-        All data are function params
         Replaces iteration
         Pattern matching functions replace conditionals
+        Immutable variables make it safe
+        All data are function params
         Standard idioms
-
 
     Pattern
         beginning
@@ -45,7 +43,7 @@ h1. Recursion
         middle
 
 
-h1. Recursion
+Recursion - example
 
     Simple case: list munging
         beginning
@@ -53,19 +51,23 @@ h1. Recursion
         middle: n -> n+1
 
 
-h1. Digression: Backwards Lists
+Digression: Backwards Lists
+
     Q: What's up with that?
     A: Both immutable and efficiently extensible
     Hint: _singly_ linked lists
 
 
-h1. Digression: Backwards Lists
+Digression: Backwards Lists
+
     Foo
     Bar
     Baz
+        only works because lists are immutable
 
 
-h1. Back to recursion: Bowling Game
+Back to recursion: Bowling Game
+
     Calculate score for a bowling game.
     Input is a list of rolls
     Output is a number - the final score
@@ -74,14 +76,15 @@ h1. Back to recursion: Bowling Game
         _OO metaphor shear_
 
 
-h1. Bowling Game
+Bowling Game
 
     beginning
     end
-    middle (normal)
-    middle (strike & spare)
-    middle (strike & spare details)
+    middle - normal
+    middle - strike & spare defs
+    middle - strike & spare details
     incomplete games?
+        Several revisions later...
     final
     Ok, that's an algorithm
         To make it useful, we need to add
@@ -89,7 +92,7 @@ h1. Bowling Game
         * storage (mutable!)
 
 
-h1. Sketching the CLI
+Sketching the CLI
 
     io:get_line
     example input
@@ -102,68 +105,87 @@ h1. Sketching the CLI
         Normally, you'd start iterating at this point...
 
 
-h1. Recurse!
+Recurse!
+
     loop with updated GameData
     recursion makes variable scoping clear
     this is the middle part of the recursion
 
-h1. Escript kicks it off
+
+Escript kicks it off
+
     this is the beginning of the recursion
     no end; ctrl-c out
-    we'll call the CLI done, now Webify!
-        Simple web app
-        Single page sends Ajax REST requests, updates itself
-        Uses the Spooky web framework & jQuery
-        Spin off a process to manage the data (bowling_store)
+    we'll call the CLI done, now...
 
 
-h1. REST API
+Webify!
+
+    Simple web app
+    Single page sends Ajax REST requests, updates itself
+    Uses the Spooky web framework & jQuery
+    Spin off a process to manage the data (bowling_store)
+
+
+REST API
 
     Yes, I'm modifying state with a GET. Shhh...
 
 
-h1. Spooky App
+Spooky App
+
     header
         behavior - like "implements"
         import as-yet-unwritten bowling_store
     init
         bowling_store is service
         sounds heavyweight, but isn't
+        will make more sense when you see the code
     get
         Spooky splits url path into list
     get (full)
-    get (static)
+    get (base)
         get base url returns page
+    get (static)
         otherwise, relative path to resource
 
 
-h1. Bowling Store
+Bowling Store
 
-    command-line loop: read, process, write, recurse
-    request-handling loop: receive, process, respond, recurse
-        same amount of work (maybe less!)
-    init: beginning
+    command-line loop
+        read, process, write, recurse
+
+    message-handling loop
+        receive, process, respond, recurse
+        same amount of code (maybe less!)
+        middle of recursion; no end
+
+    init: beginning of recursion
         take original loop(Data), wrap in closure, spawn
+
     append: API
         so client doesn't have to know about IPC
 
 
-h1. Run it!
+Run it!
 
     run from erl command line
         Of course, I got tired of typing all that.
+
     run from Escript
+        get environment variable
         add Spooky & dependencies to code path
-        compile our code, too
+        compile our code
+            remember - code reloading!
 
 
-h1. REST interaction
+REST interaction
 
     quick test from the browser
         3, 4, 10, 3
 
 
-h1. Webapp interaction
+Webapp interaction
 
     base page
     add player - all client side
@@ -171,42 +193,61 @@ h1. Webapp interaction
         3, 4, 10, 3
 
 
-h1. Extra credit: Automate REST tests
-
+Extra credit: Automate REST tests
     Command-line script, hits REST service
+        test sequence of requests: 3, 4, 10, 3
+
     Define test data
+        could define inline
         external file, just to show how it's done
+
     Load test data from file
         io:read parses straight into Erlang data structure (Term)
+
     Make REST call
         format URL, make request
         pull Content out of nested tuple structure
+
     Recurse through tests - main
         inets:start sets up http client
         beginning of recursion
+        input is list of tests, state is Passed & Failed counts
+
     Recurse through tests - test end
-        two end cases: no fails, any fails=fail
+        two end cases
+            both when test list is empty
+            no fails, any fails=fail
+
     Recurse through tests - test middle
         recurse with either pass or fail incremented
 
 
-h1. Run it!
+Run it!
+
     start_server
     web_test
     start_server w/ debugging
+        Add some debugging to bowling_web.erl, and you'll see...
 
 
-h1. Wrap-up
+Wrap-up
+
     Synergistic Weirdness
     Design patterns for recursion & message handling
     Escript for CLI
-    Spooky Webapps
-    Think small, have fun!
+    Webapps with Spooky
+        also other webapp frameworks
 
 
-h1. Bonus Materials
+Bonus Materials
+
+    presentation
+    S9 slideshow source
     Full versions of scripts (with error handling)
     Unit tests
-    presentation
-    S9 slideshow
+
+
+Crafty Erlang
+
+    contact info
 
