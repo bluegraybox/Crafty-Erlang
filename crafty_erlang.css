@@ -118,7 +118,13 @@ small {
 .author {
     color: grey;
     font-style: italic;
-    margin-top: 4em;
+    margin-top: 6em;
+}
+table.author td {
+    padding-left: 4em;
+}
+table.author td:first-child {
+    padding-left: 0;
 }
 li.none {
     list-style-type: none;
