@@ -90,13 +90,9 @@ $(document).ready( function() {
 <div class='slide '>
 <h1>Synergistic Weirdness</h1></div>
 <div class='slide '>
-<h1>Synergistic Weirdness</h1><p>Not rocket science, just different idioms</p>
-
-</div>
-<div class='slide '>
 <h1>Recursion</h1></div>
 <div class='slide '>
-<h1>Recursion</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Recursion</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 
  %% beginning
@@ -109,7 +105,7 @@ func(Input) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Recursion</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Recursion</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
  %% beginning
 func(Input) -&gt;
@@ -124,7 +120,7 @@ func([], Output) -&gt; lists:reverse(Output).
 
 </div>
 <div class='slide '>
-<h1>Recursion</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Recursion</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
  %% beginning
 func(Input) -&gt;
@@ -146,7 +142,7 @@ func([First | Rest], Output) -&gt;
 <div class='slide '>
 <h1>Digression: Backwards Lists</h1></div>
 <div class='slide '>
-<h1>Digression: Backwards Lists</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Digression: Backwards Lists</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Foo = [cat, dog].
 </pre></div>
@@ -164,7 +160,7 @@ cat - dog</pre>
 
 </div>
 <div class='slide '>
-<h1>Digression: Backwards Lists</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Digression: Backwards Lists</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Foo = [cat, dog].
 Bar = [monkey | Foo].
@@ -183,7 +179,7 @@ monkey - cat - dog</pre>
 
 </div>
 <div class='slide '>
-<h1>Digression: Backwards Lists</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Digression: Backwards Lists</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Foo = [cat, dog].
 Bar = [monkey | Foo].
@@ -194,9 +190,9 @@ Baz = [elephant, tiger | Foo].
 <!-- begin step {} -->
 <div class='step' markdown='block'>
 
-<pre>Baz        Bar      Foo
-|          |        |
-|          monkey - cat - dog
+<pre>Baz       Bar      Foo
+|         |        |
+|         monkey - cat - dog
 |                 /
 elephant - tiger /</pre>
 </div>
@@ -207,7 +203,7 @@ elephant - tiger /</pre>
 <div class='slide '>
 <h1>Back to recursion: Bowling Game</h1></div>
 <div class='slide '>
-<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Game</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
  %% Beginning: score/1 -&gt; score/3
 score(Rolls) -&gt;
@@ -220,7 +216,7 @@ score(Rolls) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Game</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
  %% Beginning
 score(Rolls) -&gt;
@@ -234,7 +230,7 @@ score(_Rolls, 11, Score) -&gt; Score.
 
 </div>
 <div class='slide '>
-<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Game</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
  %% Beginning
 score(Rolls) -&gt;
@@ -253,7 +249,7 @@ score([Roll1, Roll2 | Rest], Frame, Score) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Game</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
  %% Beginning
 score(Rolls) -&gt;
@@ -280,7 +276,7 @@ score([Roll1, Roll2 | Rest], Frame, Score) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Game</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
  %% Beginning
 score(Rolls) -&gt;
@@ -315,7 +311,7 @@ score([Roll1, Roll2 | Rest], Frame, Score) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Bowling Game</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Game</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 score(Rolls) -&gt; score(Rolls, 1, 0).
 
@@ -348,7 +344,7 @@ strike_bonus([Bonus1, Bonus2 | _Rest]) -&gt; Bonus1 + Bonus2.
 <div class='slide '>
 <h1>Ok, that&#8217;s an algorithm</h1></div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -359,7 +355,7 @@ Next&gt;
 
 </div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -371,7 +367,7 @@ Next&gt; colin 4
 
 </div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -385,7 +381,7 @@ Next&gt; colin 4
 
 </div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -401,7 +397,7 @@ Next&gt; colin 4
 
 </div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -419,7 +415,7 @@ Next&gt; colin 4
 
 </div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -439,7 +435,7 @@ Next&gt; colin 4
 
 </div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -461,7 +457,7 @@ Next&gt; colin 4
 
 </div>
 <div class='slide '>
-<h1>Sketching the CLI</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Sketching the CLI</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 Eshell V5.8.4  (abort with ^G)
 1&gt; Line = io:get_line(&quot;Next&gt; &quot;).
@@ -485,7 +481,7 @@ Next&gt; colin 4
 
 </div>
 <div class='slide '>
-<h1>Recurse!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Recurse!</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 loop(GameData) -&gt;
     Line = io:get_line(&quot;Next&gt; &quot;),
@@ -502,17 +498,100 @@ loop(GameData) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Escript kicks it off</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Begin&#8230;</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-#!/usr/local/bin/escript
-
--import(bowling_game).
-
-main([]) -&gt;
-    loop(dict:new()).
+main([]) -&gt; loop(dict:new()).
 
 loop(GameData) -&gt;
     ...
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>&#8230;with Escript!</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
+<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
+#!/usr/local/bin/escript
+#
+# scorekeeper.erl 
+
+-import(bowling_game).
+
+main([]) -&gt; loop(dict:new()).
+
+loop(GameData) -&gt;
+    ...
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: false'>
+$ ./scorekeeper.erl 
+Next&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: false'>
+$ ./scorekeeper.erl 
+Next&gt; colin 3
+New score for colin: 3
+Next&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: false'>
+$ ./scorekeeper.erl 
+Next&gt; colin 3
+New score for colin: 3
+Next&gt; colin 4
+New score for colin: 7
+Next&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: false'>
+$ ./scorekeeper.erl 
+Next&gt; colin 3
+New score for colin: 3
+Next&gt; colin 4
+New score for colin: 7
+Next&gt; colin 10
+New score for colin: 17
+Next&gt;
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Run it!</h1><!-- begin code{:line_numbers=>"false"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: false'>
+$ ./scorekeeper.erl 
+Next&gt; colin 3
+New score for colin: 3
+Next&gt; colin 4
+New score for colin: 7
+Next&gt; colin 10
+New score for colin: 17
+Next&gt; colin 3
+New score for colin: 23
+Next&gt; 
 </pre></div>
 <!-- end code -->
 
@@ -527,19 +606,18 @@ loop(GameData) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Spooky App</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Spooky App</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 -module(bowling_web).
 -behaviour(spooky).
 -export([init/1, get/2]).  % Spooky API
--import(bowling_store).
 </pre></div>
 <!-- end code -->
 
 
 </div>
 <div class='slide '>
-<h1>Spooky App</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Spooky App</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 -module(bowling_web).
 -behaviour(spooky).
@@ -547,7 +625,8 @@ loop(GameData) -&gt;
 -import(bowling_store).
 
 init([])-&gt;
-    register(store, bowling_store:init()),
+    Pid = bowling_store:init(),
+    register(store, Pid),
     [{port, 8000}].
 </pre></div>
 <!-- end code -->
@@ -555,7 +634,7 @@ init([])-&gt;
 
 </div>
 <div class='slide '>
-<h1>Spooky App</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Spooky App</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 -module(bowling_web).
 -behaviour(spooky).
@@ -574,7 +653,7 @@ get(_Req, [&quot;add&quot;, Player, RollText])-&gt;
 
 </div>
 <div class='slide '>
-<h1>Spooky App</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Spooky App</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 -module(bowling_web).
 -behaviour(spooky).
@@ -594,7 +673,7 @@ get(_Req, [&quot;add&quot;, Player, RollText])-&gt;
 
 </div>
 <div class='slide '>
-<h1>Spooky App</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Spooky App</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 -module(bowling_web).
 -behaviour(spooky).
@@ -616,7 +695,7 @@ get(Req, [])-&gt; get(Req, [&quot;form.html&quot;]);  % main page
 
 </div>
 <div class='slide '>
-<h1>Spooky App</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Spooky App</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 -module(bowling_web).
 -behaviour(spooky).
@@ -646,7 +725,7 @@ get(_Req, Path)-&gt;  % other static resources
 </div>
 <div class='slide '>
 <h1>Bowling Store</h1><p>Remember the command-line loop?</p>
-<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 loop(GameData) -&gt;
     Line = io:get_line(&quot;Next&gt; &quot;),
@@ -667,7 +746,7 @@ loop(GameData) -&gt;
 </div>
 <div class='slide '>
 <h1>Bowling Store</h1><p>Here&#8217;s the message-handling loop.</p>
-<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 loop(GameData) -&gt;
     receive {From, {append, Player, RollText}} -&gt;
@@ -688,7 +767,7 @@ loop(GameData) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Bowling Store</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Store</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 loop(GameData) -&gt;
     receive {From, {append, Player, RollText}} -&gt;
@@ -703,14 +782,14 @@ loop(GameData) -&gt;
 init() -&gt;
     Data = dict:new(),
     Start = fun() -&gt; loop(Data) end,
-    spawn(Start).
+    spawn(Start).  % returns pid
 </pre></div>
 <!-- end code -->
 
 
 </div>
 <div class='slide '>
-<h1>Bowling Store</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Bowling Store</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 loop(GameData) -&gt;
     receive {From, {append, Player, RollText}} -&gt;
@@ -725,8 +804,9 @@ loop(GameData) -&gt;
 init() -&gt;
     Data = dict:new(),
     Start = fun() -&gt; loop(Data) end,
-    spawn(Start).
+    spawn(Start).  % returns pid
 
+ %% external API
 append(Player, RollText, Pid) -&gt;
     Pid ! {self(), {append, Player, RollText}},
     receive Resp -&gt; Resp end.
@@ -736,7 +816,7 @@ append(Player, RollText, Pid) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>Run it!</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 $ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
 ...
@@ -750,7 +830,7 @@ Eshell V5.8.4  (abort with ^G)
 
 </div>
 <div class='slide '>
-<h1>&#8230;with Escript!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
+<h1>&#8230;with Escript!</h1><!-- begin code{:lang=>"erlang", :line_numbers=>"false"} -->
 <div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
 #!/usr/local/bin/escript
 
@@ -821,183 +901,6 @@ main([]) -&gt;
 
 </div>
 <div class='slide '>
-<h1>Extra credit: Automate REST tests</h1></div>
-<div class='slide '>
-<h1>Define test data</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
- %% web_tests.data
- %% Tests defined as list of {Player, Roll, Score} tuples
-[
-{colin, 3,  3},
-{colin, 4,  7},
-{colin, 10, 17},
-{colin, 3,  23}
-].  % need the period at the end
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Load test data from file</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-load_tests() -&gt;
-    {ok, Handle} = file:open(&quot;web_tests.data&quot;, [read]),
-    {ok, Tests} = io:read(Handle, &quot;&quot;),
-    file:close(Handle),
-    Tests.
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Make REST call</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-get_score(Player, Roll) -&gt;
-    Url = io_lib:format(&quot;http://localhost:8000/add/~p/~p&quot;, [Player, Roll]),
-    {ok, {_Status, _Header, Content}} = httpc:request(Url),
-    {Score, _} = string:to_integer(Content),
-    Score.
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Recurse through tests</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-#!/usr/local/bin/escript
-
- %% beginning
-main(_) -&gt;
-    inets:start(),
-    Tests = load_tests(),
-    Passed = Failed = 0,
-    test(Tests, Passed, Failed).
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Recurse through tests</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-#!/usr/local/bin/escript
-
- %% beginning
-main(_) -&gt;
-    inets:start(),
-    Tests = load_tests(),
-    Passed = Failed = 0,
-    test(Tests, Passed, Failed).
-
- %% end
-test([], Passed, 0) -&gt;
-    io:format(&quot;Passed! (~p tests)~n&quot;, [Passed]);
-
-test([], Passed, Failed) -&gt;
-    io:format(&quot;Failed! Passed ~p, Failed ~p~n&quot;, [Passed, Failed]);
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Recurse through tests</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-#!/usr/local/bin/escript
-
- %% beginning
-main(_) -&gt;
-    inets:start(),
-    Tests = load_tests(),
-    Passed = Failed = 0,
-    test(Tests, Passed, Failed).
-
- %% end
-test([], Passed, 0) -&gt;
-    io:format(&quot;Passed! (~p tests)~n&quot;, [Passed]);
-
-test([], Passed, Failed) -&gt;
-    io:format(&quot;Failed! Passed ~p, Failed ~p~n&quot;, [Passed, Failed]);
-
- %% middle
-test([{Player, Roll, Expected} | Tests], Passed, Failed) -&gt;
-    case get_score(Player, Roll) of
-        Expected -&gt;
-            io:format(&quot;.&quot;),
-            test(Tests, Passed + 1, Failed);
-        Actual -&gt;
-            io:format(&quot;Failed: expected=~p, actual=~p~n&quot;, [Expected, Actual]),
-            test(Tests, Passed, Failed + 1)
-    end.
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-$ ./start_server.erl 
-Started spooky
-Return to exit...  
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-$ ./start_server.erl 
-Started spooky
-Return to exit...  
-</pre></div>
-<!-- end code -->
-
-<!-- begin code{:line_numbers=>"false", :lang=>"bash"} -->
-<div class='code'><pre class='brush: bash toolbar: false gutter: false'>
-$ ./web_test.erl 
-....Passed! (4 tests)
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
-<h1>Run it!</h1><!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-$ ./start_server.erl 
-Started spooky
-Return to exit...  
-</pre></div>
-<!-- end code -->
-
-<!-- begin code{:line_numbers=>"false", :lang=>"bash"} -->
-<div class='code'><pre class='brush: bash toolbar: false gutter: false'>
-$ ./web_test.erl 
-....Passed! (4 tests)
-</pre></div>
-<!-- end code -->
-
-<p><em>Add debugging to server&#8230;</em></p>
-<!-- begin code{:line_numbers=>"false", :lang=>"erlang"} -->
-<div class='code'><pre class='brush: erlang toolbar: false gutter: false'>
-$ ./start_server.erl 
-Started spooky
-Return to exit...  Add 3 for colin
-Return to exit...  Add 4 for colin
-Return to exit...  Add 10 for colin
-Return to exit...  Add 3 for colin
-Return to exit...  
-</pre></div>
-<!-- end code -->
-
-
-</div>
-<div class='slide '>
 <h1>Wrap-up</h1><ul>
 	<li>Weirdness</li>
 	<li>Idioms</li>
@@ -1018,6 +921,7 @@ Return to exit...
 	<ul>
 		<li>S9 markup</li>
 		<li>Full source</li>
+		<li>Command-line web testing tool</li>
 	</ul></li>
 </ul>
 <ul>
