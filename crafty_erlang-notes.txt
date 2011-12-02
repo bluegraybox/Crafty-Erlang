@@ -195,43 +195,6 @@ Webapp interaction
         3, 4, 10, 3
 
 
-Extra credit: Automate REST tests
-    Command-line script, hits REST service
-        test sequence of requests: 3, 4, 10, 3
-
-    Define test data
-        could define inline
-        external file, just to show how it's done
-
-    Load test data from file
-        io:read parses straight into Erlang data structure (Term)
-
-    Make REST call
-        format URL, make request
-        pull Content out of nested tuple structure
-
-    Recurse through tests - main
-        inets:start sets up http client
-        beginning of recursion
-        input is list of tests, state is Passed & Failed counts
-
-    Recurse through tests - test end
-        two end cases
-            both when test list is empty
-            no fails, any fails=fail
-
-    Recurse through tests - test middle
-        recurse with either pass or fail incremented
-
-
-Run it!
-
-    start_server
-    web_test
-    start_server w/ debugging
-        Add some debugging to bowling_web.erl, and you'll see...
-
-
 Wrap-up
 
     Synergistic Weirdness
