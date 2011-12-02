@@ -1,15 +1,15 @@
 -module(bowling_web).
 -behaviour(spooky).
 -export([init/1, get/2]).
--import(bowling_store).
+-import(bowling_service).
 
 init([])->
-    register(store, bowling_store:init()),
+    register(bowl_svc, bowling_service:init()),
     [{port, 8000}].
 
 get(_Req, ["add", Player, RollText])->
     io:format("Add ~s for ~s~n", [RollText, Player]),
-    Score = bowling_store:append(Player, RollText, store),
+    Score = bowling_service:append(Player, RollText, bowl_svc),
     {200, io_lib:format("~p", [Score])};
 
 get(Req, [])-> get(Req, ["form.html"]);  % main page

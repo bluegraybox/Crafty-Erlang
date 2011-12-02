@@ -500,6 +500,91 @@ Next>
 
 
 h1. Webify!
+* jQuery -> Ajax -> REST -> bowling_game
+* concurrent!
+* OO?!
+
+h1. Bowling Service
+
+Remember the command-line loop?
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    Line = io:get_line("Next> "),
+    [Player, RollText] = string:tokens(Line, " \t\n"),
+
+    {Roll, _} = string:to_integer(RollText),
+    NewGameData = dict:append(Player, Roll, GameData),
+    {ok, Rolls} = dict:find(Player, NewGameData).
+    Score = bowling_game:score(Rolls).
+
+    io:format("New score for ~s: ~p~n", [Player, Score]),
+
+    loop(NewGameData).
+{% end %}
+
+
+h1. Bowling Service
+
+Here's the message-handling loop.
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    receive {From, {append, Player, RollText}} ->
+
+        %% This is the same
+        {Roll, _} = string:to_integer(RollText),
+        NewGameData = dict:append(Player, Roll, GameData),
+        {ok, Rolls} = dict:find(Player, NewGameData),
+        Score = bowling_game:score(Rolls),
+
+        From ! Score,
+
+        loop(NewGameData)
+    end.
+{% end %}
+
+
+h1. Bowling Service
+
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    receive {From, {append, Player, RollText}} ->
+        {Roll, _} = string:to_integer(RollText),
+        NewGameData = dict:append(Player, Roll, GameData),
+        {ok, Rolls} = dict:find(Player, NewGameData),
+        Score = bowling_game:score(Rolls),
+        From ! Score,
+        loop(NewGameData)
+    end.
+
+init() ->
+    Data = dict:new(),
+    Start = fun() -> loop(Data) end,
+    spawn(Start).  % returns pid
+{% end %}
+
+
+h1. Bowling Service
+
+{% code lang=erlang line_numbers=false %}
+loop(GameData) ->
+    receive {From, {append, Player, RollText}} ->
+        {Roll, _} = string:to_integer(RollText),
+        NewGameData = dict:append(Player, Roll, GameData),
+        {ok, Rolls} = dict:find(Player, NewGameData),
+        Score = bowling_game:score(Rolls),
+        From ! Score,
+        loop(NewGameData)
+    end.
+
+init() ->
+    Data = dict:new(),
+    Start = fun() -> loop(Data) end,
+    spawn(Start).  % returns pid
+
+append(Player, RollText, Pid) ->
+    Pid ! {self(), {append, Player, RollText}},
+    receive Resp -> Resp end.
+{% end %}
 
 
 h1. REST API
@@ -524,11 +609,11 @@ h1. Spooky App
 -module(bowling_web).
 -behaviour(spooky).
 -export([init/1, get/2]).  % Spooky API
--import(bowling_store).
+-import(bowling_service).
 
 init([])->
-    Pid = bowling_store:init(),
-    register(store, Pid),
+    Pid = bowling_service:init(),
+    register(bowl_svc, Pid),
     [{port, 8000}].
 {% end %}
 
@@ -538,12 +623,13 @@ h1. Spooky App
 -module(bowling_web).
 -behaviour(spooky).
 -export([init/1, get/2]).  % Spooky API
--import(bowling_store).
+-import(bowling_service).
 
 init([])->
-    register(store, bowling_store:init()),
+    register(bowl_svc, bowling_service:init()),
     [{port, 8000}].
 
+ %% REST handler
 get(_Req, ["add", Player, RollText])->
     ...
 {% end %}
@@ -554,14 +640,15 @@ h1. Spooky App
 -module(bowling_web).
 -behaviour(spooky).
 -export([init/1, get/2]).  % Spooky API
--import(bowling_store).
+-import(bowling_service).
 
 init([])->
-    register(store, bowling_store:init()),
+    register(bowl_svc, bowling_service:init()),
     [{port, 8000}].
 
+ %% REST handler
 get(_Req, ["add", Player, RollText])->
-    Score = bowling_store:append(Player, RollText, store),
+    Score = bowling_service:append(Player, RollText, bowl_svc),
     {200, io_lib:format("~p", [Score])};
 {% end %}
 
@@ -571,35 +658,18 @@ h1. Spooky App
 -module(bowling_web).
 -behaviour(spooky).
 -export([init/1, get/2]).  % Spooky API
--import(bowling_store).
+-import(bowling_service).
 
 init([])->
-    register(store, bowling_store:init()),
+    register(bowl_svc, bowling_service:init()),
     [{port, 8000}].
 
+ %% REST handler
 get(_Req, ["add", Player, RollText])->
-    Score = bowling_store:append(Player, RollText, store),
+    Score = bowling_service:append(Player, RollText, bowl_svc),
     {200, io_lib:format("~p", [Score])};
 
-get(Req, [])-> get(Req, ["form.html"]);  % main page
-{% end %}
-
-
-h1. Spooky App
-{% code lang=erlang line_numbers=false %}
--module(bowling_web).
--behaviour(spooky).
--export([init/1, get/2]).  % Spooky API
--import(bowling_store).
-
-init([])->
-    register(store, bowling_store:init()),
-    [{port, 8000}].
-
-get(_Req, ["add", Player, RollText])->
-    Score = bowling_store:append(Player, RollText, store),
-    {200, io_lib:format("~p", [Score])};
-
+ %% static page handlers
 get(Req, [])-> get(Req, ["form.html"]);  % main page
 
 get(_Req, Path)->  % other static resources
@@ -608,90 +678,6 @@ get(_Req, Path)->  % other static resources
         {ok, PageBytes} -> {200, binary_to_list(PageBytes)};
         {error, Reason} -> {404, Reason}
     end.
-{% end %}
-
-
-h1. Bowling Store
-
-Remember the command-line loop?
-{% code lang=erlang line_numbers=false %}
-loop(GameData) ->
-    Line = io:get_line("Next> "),
-    [Player, RollText] = string:tokens(Line, " \t\n"),
-
-    {Roll, _} = string:to_integer(RollText),
-    NewGameData = dict:append(Player, Roll, GameData),
-    {ok, Rolls} = dict:find(Player, NewGameData).
-    Score = bowling_game:score(Rolls).
-
-    io:format("New score for ~s: ~p~n", [Player, Score]),
-
-    loop(NewGameData).
-{% end %}
-
-
-h1. Bowling Store
-
-Here's the message-handling loop.
-{% code lang=erlang line_numbers=false %}
-loop(GameData) ->
-    receive {From, {append, Player, RollText}} ->
-
-        %% This is the same
-        {Roll, _} = string:to_integer(RollText),
-        NewGameData = dict:append(Player, Roll, GameData),
-        {ok, Rolls} = dict:find(Player, NewGameData),
-        Score = bowling_game:score(Rolls),
-
-        From ! Score,
-
-        loop(NewGameData)
-    end.
-{% end %}
-
-
-h1. Bowling Store
-
-{% code lang=erlang line_numbers=false %}
-loop(GameData) ->
-    receive {From, {append, Player, RollText}} ->
-        {Roll, _} = string:to_integer(RollText),
-        NewGameData = dict:append(Player, Roll, GameData),
-        {ok, Rolls} = dict:find(Player, NewGameData),
-        Score = bowling_game:score(Rolls),
-        From ! Score,
-        loop(NewGameData)
-    end.
-
-init() ->
-    Data = dict:new(),
-    Start = fun() -> loop(Data) end,
-    spawn(Start).  % returns pid
-{% end %}
-
-
-h1. Bowling Store
-
-{% code lang=erlang line_numbers=false %}
-loop(GameData) ->
-    receive {From, {append, Player, RollText}} ->
-        {Roll, _} = string:to_integer(RollText),
-        NewGameData = dict:append(Player, Roll, GameData),
-        {ok, Rolls} = dict:find(Player, NewGameData),
-        Score = bowling_game:score(Rolls),
-        From ! Score,
-        loop(NewGameData)
-    end.
-
-init() ->
-    Data = dict:new(),
-    Start = fun() -> loop(Data) end,
-    spawn(Start).  % returns pid
-
- %% external API
-append(Player, RollText, Pid) ->
-    Pid ! {self(), {append, Player, RollText}},
-    receive Resp -> Resp end.
 {% end %}
 
 
@@ -719,7 +705,7 @@ main([]) ->
 
     %% Compile our modules, just to be safe.
     c:c(bowling_game),
-    c:c(bowling_store),
+    c:c(bowling_service),
     c:c(bowling_web),
 
     spooky:start_link(bowling_web),
@@ -785,18 +771,14 @@ h1. Webapp interaction
 !slide_images/bowling_app_7.png(add/colin/3)!
 
 
-h1. Wrap-up
-* Weirdness
-* Idioms
-* Escript
-* Webapps
+h1. Ta-dah!
 
 
-h1. Bonus Materials
-*(none) "bluegraybox.github.com/Crafty-Erlang":http://bluegraybox.github.com/Crafty-Erlang
+h1. Extra Stuff
+*(none) "bluegraybox.*github.com*/Crafty-Erlang":http://bluegraybox.github.com/Crafty-Erlang
 ** Presentation (GitHub Pages)
 
-*(none) "github.com/bluegraybox/Crafty-Erlang":http://github.com/bluegraybox/Crafty-Erlang
+*(none) "*github.com*/bluegraybox/Crafty-Erlang":http://github.com/bluegraybox/Crafty-Erlang
 ** S9 markup
 ** Full source
 ** Command-line web testing tool

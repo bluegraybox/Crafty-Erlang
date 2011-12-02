@@ -16,7 +16,7 @@ main([SpookyDir]) ->
 
     %% Compile our modules, just to be safe.
     c:c(bowling_game),
-    c:c(bowling_store),
+    c:c(bowling_service),
     c:c(bowling_web),
 
     spooky:start_link(bowling_web),

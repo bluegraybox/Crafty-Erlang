@@ -1,7 +1,7 @@
 Crafty Erlang
 
     Colin
-    Standard spiel about Erlang:
+    Common perception of Erlang:
         massively scalable
         ugly language, awkward restrictions
     Challenge that:
@@ -120,12 +120,36 @@ Escript kicks it off
 Webify!
 
     Simple web app
-    Same logic, new interface
     Single page sends Ajax requests to REST service
-        updates itself with javascript
+        updates display with javascript
+    REST - same API
+        add roll for player, get their score
     Uses the Spooky web framework (Sinatra) & jQuery
-    Multiple processes handling web requests, so
-        Spin off a service process to manage the data (bowling_store)
+
+    CLI = sequential; Web service = concurrent
+    OO = conceptual message passing; in Erlang it's literal
+        event-handling process manages data access
+
+    segue: So what does that look like?...
+
+
+Bowling Service
+
+    command-line loop
+        read, process, write, recurse
+
+    message-handling loop
+        receive, process, respond, recurse
+        same amount of code (maybe less!)
+        process owns data, not vice-versa
+        middle of recursion; no end
+
+    init: beginning of recursion
+        take original loop(Data), wrap in closure, spawn
+
+    append: API
+        so client doesn't have to know about IPC
+        synchronous
 
 
 REST API
@@ -149,24 +173,6 @@ Spooky App
         get base url returns page
     get (static)
         otherwise, relative path to resource
-
-
-Bowling Store
-
-    command-line loop
-        read, process, write, recurse
-
-    message-handling loop
-        receive, process, respond, recurse
-        same amount of code (maybe less!)
-        middle of recursion; no end
-        process owns data, not vice-versa
-
-    init: beginning of recursion
-        take original loop(Data), wrap in closure, spawn
-
-    append: API
-        so client doesn't have to know about IPC
 
 
 Run it!
@@ -195,16 +201,18 @@ Webapp interaction
         3, 4, 10, 3
 
 
-Wrap-up
+Ta-dah!
 
     Synergistic Weirdness
-    Design patterns for recursion & message handling
+    Design patterns/programming idioms
+        Recursion
+        Event handling/IPC - processes as objects
     Escript for CLI
     Webapps with Spooky
         also other webapp frameworks
 
 
-Bonus Materials
+Extra Stuff
 
     presentation
     S9 slideshow source

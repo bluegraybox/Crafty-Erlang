@@ -1,4 +1,4 @@
--module(bowling_store).
+-module(bowling_service).
 -import(bowling_game).
 
 -export([init/0, append/3]).
