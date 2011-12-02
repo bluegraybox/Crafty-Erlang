@@ -2,8 +2,7 @@
 
 -import(bowling_game).
 
-main([]) ->
-    loop(dict:new()).
+main([]) -> loop(dict:new()).
 
 loop(Dict) ->
     Line = io:get_line("Next> "),
@@ -13,15 +12,9 @@ loop(Dict) ->
         [Player, RollText] ->
             {Roll, _} = string:to_integer(RollText),
             NewDict = dict:append(Player, Roll, Dict),
-            Rolls = dict_find(Player, NewDict),
+            {ok, Rolls} = dict:find(Player, NewDict),
             Score = bowling_game:score(Rolls),
             io:format("New score for ~s: ~p~n", [Player, Score]),
             loop(NewDict)
-    end.
-
-dict_find(Key, Dict) ->
-    case dict:find(Key, Dict) of
-        {ok, Value} -> Value;
-        error -> []
     end.
 

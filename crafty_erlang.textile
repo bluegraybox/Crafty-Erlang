@@ -61,11 +61,6 @@ p(author). Colin MacDonald
 h1. Synergistic Weirdness
 
 
-h1. Synergistic Weirdness
-
-Not rocket science, just different idioms
-
-
 h1. Recursion
 
 
@@ -148,9 +143,9 @@ Baz = [elephant, tiger | Foo].
 {% end %}
 
 {% step %}
-pre. Baz        Bar      Foo
-|          |        |
-|          monkey - cat - dog
+pre. Baz       Bar      Foo
+|         |        |
+|         monkey - cat - dog
 |                 /
 elephant - tiger /
 {% end %}
@@ -425,17 +420,82 @@ loop(GameData) ->
 {% end %}
 
 
-h1. Escript kicks it off
+h1. Begin...
 {% code lang=erlang line_numbers=false %}
-#!/usr/local/bin/escript
-
--import(bowling_game).
-
-main([]) ->
-    loop(dict:new()).
+main([]) -> loop(dict:new()).
 
 loop(GameData) ->
     ...
+{% end %}
+
+
+h1. ...with Escript!
+{% code lang=erlang line_numbers=false %}
+#!/usr/local/bin/escript
+#
+# scorekeeper.erl 
+
+-import(bowling_game).
+
+main([]) -> loop(dict:new()).
+
+loop(GameData) ->
+    ...
+{% end %}
+
+
+h1. Run it!
+{% code line_numbers=false %}
+$ ./scorekeeper.erl 
+Next>
+{% end %}
+
+
+h1. Run it!
+{% code line_numbers=false %}
+$ ./scorekeeper.erl 
+Next> colin 3
+New score for colin: 3
+Next>
+{% end %}
+
+
+h1. Run it!
+{% code line_numbers=false %}
+$ ./scorekeeper.erl 
+Next> colin 3
+New score for colin: 3
+Next> colin 4
+New score for colin: 7
+Next>
+{% end %}
+
+
+h1. Run it!
+{% code line_numbers=false %}
+$ ./scorekeeper.erl 
+Next> colin 3
+New score for colin: 3
+Next> colin 4
+New score for colin: 7
+Next> colin 10
+New score for colin: 17
+Next>
+{% end %}
+
+
+h1. Run it!
+{% code line_numbers=false %}
+$ ./scorekeeper.erl 
+Next> colin 3
+New score for colin: 3
+Next> colin 4
+New score for colin: 7
+Next> colin 10
+New score for colin: 17
+Next> colin 3
+New score for colin: 23
+Next> 
 {% end %}
 
 
@@ -456,7 +516,6 @@ h1. Spooky App
 -module(bowling_web).
 -behaviour(spooky).
 -export([init/1, get/2]).  % Spooky API
--import(bowling_store).
 {% end %}
 
 
@@ -468,7 +527,8 @@ h1. Spooky App
 -import(bowling_store).
 
 init([])->
-    register(store, bowling_store:init()),
+    Pid = bowling_store:init(),
+    register(store, Pid),
     [{port, 8000}].
 {% end %}
 
@@ -606,7 +666,7 @@ loop(GameData) ->
 init() ->
     Data = dict:new(),
     Start = fun() -> loop(Data) end,
-    spawn(Start).
+    spawn(Start).  % returns pid
 {% end %}
 
 
@@ -626,8 +686,9 @@ loop(GameData) ->
 init() ->
     Data = dict:new(),
     Start = fun() -> loop(Data) end,
-    spawn(Start).
+    spawn(Start).  % returns pid
 
+ %% external API
 append(Player, RollText, Pid) ->
     Pid ! {self(), {append, Player, RollText}},
     receive Resp -> Resp end.

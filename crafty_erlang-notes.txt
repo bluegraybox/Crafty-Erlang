@@ -1,46 +1,43 @@
 Crafty Erlang
 
+    Colin
+    Standard spiel about Erlang:
+        massively scalable
+        ugly language, awkward restrictions
+    Challenge that:
+        good for small programs; elegant
+        Just a different way of doing things
+    There is "a way of doing things" - Idioms/design patterns
     Small but useful projects
-    Thinking in Erlang
-    Idioms/design patterns
+    get you started having fun w/ Erlang
 
 
 Synergistic Weirdness
 
     Weirdness - missing stuff
-        "I need to write a for loop to iterate over a list of objects and update them"
+        "I want to write a 'for' loop that increments a counter"
         Mutable variables
         Loop controls (for, while)
         Objects
-
     Weirdness - extra stuff
-        Pattern matching (and guard expressions)
-        Recursion
+        Pattern matching functions and guard expressions
+        Tail recursion
         Inter-Process Communication/Messaging (IPC)
 
+    When will I use that stuff? All the time
+
     Synergistic Weirdness
-        Pattern matching + immutability = clean & easy recursion
-        Pattern matching -> clean & easy IPC message handling
-        Recursion + IPC = safe mutable resources
-
-
-Synergistic Weirdness - Not rocket science
+        the weird stuff combines to make something elegant
+        one example is...
 
 
 Recursion
 
-    Recursion is Cheap, Clean, & Easy
-        Use it for _everything_
-        Replaces iteration
-        Pattern matching functions replace conditionals
-        Immutable variables make it safe
-        All data are function params
-        Standard idioms
-
-    Pattern
-        beginning
-        end
-        middle
+    Replaces iteration/for/while controls
+    Scary in OO because of side effects
+    Immutable variables make it safe; limitation = strength
+    Pattern matching makes it powerful
+    Standard pattern: beginning, end, middle
 
 
 Recursion - example
@@ -49,6 +46,7 @@ Recursion - example
         beginning
         end
         middle: n -> n+1
+    Conclusion: multiple inputs & outputs, end & middle funcs
 
 
 Digression: Backwards Lists
@@ -62,8 +60,7 @@ Digression: Backwards Lists
 
     Foo
     Bar
-    Baz
-        only works because lists are immutable
+    Baz - only works because lists are immutable
 
 
 Back to recursion: Bowling Game
@@ -73,7 +70,6 @@ Back to recursion: Bowling Game
     Output is a number - the final score
     Need to keep track of frame numbers - not fixed number of rolls
     Frame score may depend on other frames
-        _OO metaphor shear_
 
 
 Bowling Game
@@ -118,13 +114,18 @@ Escript kicks it off
     no end; ctrl-c out
     we'll call the CLI done, now...
 
+    Run it!
+
 
 Webify!
 
     Simple web app
-    Single page sends Ajax REST requests, updates itself
-    Uses the Spooky web framework & jQuery
-    Spin off a process to manage the data (bowling_store)
+    Same logic, new interface
+    Single page sends Ajax requests to REST service
+        updates itself with javascript
+    Uses the Spooky web framework (Sinatra) & jQuery
+    Multiple processes handling web requests, so
+        Spin off a service process to manage the data (bowling_store)
 
 
 REST API
@@ -159,6 +160,7 @@ Bowling Store
         receive, process, respond, recurse
         same amount of code (maybe less!)
         middle of recursion; no end
+        process owns data, not vice-versa
 
     init: beginning of recursion
         take original loop(Data), wrap in closure, spawn
