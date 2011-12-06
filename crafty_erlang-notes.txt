@@ -161,11 +161,8 @@ Spooky App
 
     header
         behavior - like "implements"
-        import as-yet-unwritten bowling_store
     init
-        bowling_store is service
-        sounds heavyweight, but isn't
-        will make more sense when you see the code
+        register service
     get
         Spooky splits url path into list
     get (full)

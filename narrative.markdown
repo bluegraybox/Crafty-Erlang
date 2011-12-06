@@ -1,6 +1,5 @@
-# Crafty Erlang: Your new favorite scripting language?
-
-## An elegant language for small projects
+# Crafty Erlang: An elegant language for small projects
+_This is based on the talk I gave at [ErlangDC](http://erlangdc.com/)_.
 
 The common perception of Erlang is that it's a good language for big projects where you need massive scalability, distribution, fault-tolerance and so on.
 The language itself is weird and ugly, and it's got a lot of annoying restrictions, but that's what you have to put up with to get the good stuff.
@@ -298,6 +297,8 @@ The other change here is that we'll have to deal with concurrency.
 The command line is inherently sequential, but web services are inherently concurrent.
 We'll need to create a mini-service which will control access to our bowling data.
 
+## Bowling Service
+
 A bit of a digression:
 I've seen it argued that Erlang is one of the most truly object-oriented languages.
 The original theory behind object-oriented design was that objects would be like living things that talk to each other.
@@ -307,8 +308,8 @@ Most OO languages implement this by wrapping a dumb data structure in a bunch of
 What Erlang does is create processes to manage access to data.
 Rather than data having associated methods, Erlang has processes that own data.
 The only way to get to the data is to talk to the process, and that's where IPC comes in.
-So what does that look like?
 
+So what does that look like?
 Well, remember the command-line loop?
 Let's break that up into sections.
 
@@ -323,7 +324,7 @@ Let's break that up into sections.
         {ok, Rolls} = dict:find(Player, NewGameData).
         Score = bowling_game:score(Rolls).
 
-        %% print output
+        %% print new score
         io:format("New score for ~s: ~p~n", [Player, Score]),
 
         %% recurse with new state
@@ -341,7 +342,7 @@ Now here's the message-handling loop.
             {ok, Rolls} = dict:find(Player, NewGameData),
             Score = bowling_game:score(Rolls),
 
-            %% send updated score to requesting process
+            %% respond with new score
             From ! Score,
 
             %% recurse with new state
@@ -353,4 +354,187 @@ Instead of waiting for command-line input, we wait for a message.
 Instead of printing our response, we send a message back.
 GameData is a local variable to loop/1.
 Nobody else can see it; there's only one process that can change it.
+
+Again, that's the middle; how do we start this recursion?
+As with the CLI, we need a beginning function that creates the dictionary.
+The difference here is that instead of calling `loop/1` directly, we wrap it in a closure and spawn it off as a new process.
+
+    init() ->
+        Data = dict:new(),
+        Start = fun() -> loop(Data) end,
+        spawn(Start).  % returns process id
+
+For convenience, we'll add an `append/3` function for our clients.
+It hides the message format, and makes the asynchronous request synchronous.
+This makes it look a lot like we're creating an object and updating it.
+
+    append(Player, RollText, Pid) ->
+        Pid ! {self(), {append, Player, RollText}},
+        receive Resp -> Resp end.
+
+
+## REST API
+
+Now that our back-end service is done, we move to the REST interface.
+Let's keep this simple.
+Let's just take a GET request - a straight URL - something like this:
+
+    http://localhost:8000/add/Player/Roll
+
+So for example:
+
+    http://localhost:8000/add/colin/4
+
+Yes, I know this isn't entirely kosher for a REST API - we shouldn't be modifying state with a GET - but we're just doing the simplest thing that works here.
+
+
+## Spooky App
+
+To create a Spooky web application, we just need to create a module that has the "spooky" behavior and exports Spooky's callback functions.
+To use our bowling module, we'll need to import that.
+
+    -module(bowling_web).
+    -behaviour(spooky).
+    -export([init/1, get/2]).  % Spooky API
+    -import(bowling_service).
+
+`init/1` is called once, when the server starts up.
+It starts up the bowling service we just defined, and registers its process id as `bowl_svc`.
+That lets us refer to it by name, so we don't have to pass the PID around somehow.
+This would be especially useful in a situation where the service might be restarted and get a new process id.
+Other processes could continue to use it without needing to know the new PID.
+The return value configures Spooky to start up on port 8000.
+
+    init([])->
+        register(bowl_svc, bowling_service:init()),
+        [{port, 8000}].
+
+`get/2` is called to handle each HTTP GET request.
+Spooky splits up the URL's resource path into a list of strings.
+That makes it easy to match on patterns, like so.
+
+     %% REST handler
+    get(_Req, ["add", Player, RollText])->
+        Score = bowling_service:append(Player, RollText, bowl_svc),
+        {200, io_lib:format("~p", [Score])};
+
+We'll also need to define handlers for the base web page and any associated resources, such as Javascript or CSS files, or images.
+If there is no resource path - the URL is just the host and port - we'll return our base page.
+Otherwise, we treat the resource path as a relative path to a file, and try to return that.
+
+     %% static page handlers
+    get(Req, [])-> get(Req, ["form.html"]);  % main page
+
+    get(_Req, Path)->  % other static resources
+        Filename = filename:join(Path),
+        case file:read_file(Filename) of
+            {ok, PageBytes} -> {200, binary_to_list(PageBytes)};
+            {error, Reason} -> {404, Reason}
+        end.
+
+## Run it!
+
+We can start up the Spooky server from the Erlang shell as long as we add Spooky and its dependencies to the code path.
+Note that what we're doing here is starting the Spooky server, and telling it to use our `bowling_web` module as its plug-in request handler.
+
+    $ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
+    ...
+    Eshell V5.8.4  (abort with ^G)
+    1> spooky:start_link(bowling_web).
+    {ok,<0.35.0>}
+    2> 
+
+Of course, I got tired of typing that every time, so I wrote an Escript to do it.
+This uses a `SPOOKY_DIR` environment variable to find all the dependencies.
+As an extra bonus, it compiles all our modules for us.
+Note that the same process is compiling them and then loading them.
+This is Erlang's hot code reloading in action, in a low-key way.
+
+    #!/usr/local/bin/escript
+
+    main([]) ->
+        SpookyDir = os:getenv("SPOOKY_DIR"),
+        %% Add spooky and its dependencies to the code path.
+        true = code:add_path(SpookyDir ++ "/ebin"),
+        Deps = filelib:wildcard(SpookyDir ++ "/deps/*/ebin"),
+        ok = code:add_paths(Deps),
+
+        %% Compile our modules, just to be safe.
+        c:c(bowling_game),
+        c:c(bowling_service),
+        c:c(bowling_web),
+
+        spooky:start_link(bowling_web),
+        io:format("Started spooky~n"),
+
+        io:get_line("Return to exit...  "),
+        spooky:stop().
+
+This is a script, and when it gets to its end it shuts down any processes it started, including Spooky.
+So while we started up Spooky as before, we then needed a way to keep the script from exiting.
+So we called `io:get_line/1`, which will hang until the user enters something.
+At that point it returns and goes on to the `spooky:stop/0` line, which shuts down gracefully.
+
+## REST interaction
+
+Now that the server is up and running, we can test it by hitting our REST service directly from a browser.
+We can see that it gets the same results as our command-line run did.
+
+![add/colin/3](slide_images/bowling_rest_1.png)
+
+![add/colin/4](slide_images/bowling_rest_2.png)
+
+![add/colin/10](slide_images/bowling_rest_3.png)
+
+![add/colin/3](slide_images/bowling_rest_4.png)
+
+
+## Webapp interaction
+
+Now we get to the web client itself.
+Hitting our base URL brings up the main page.
+
+![/](slide_images/bowling_app_1.png)
+
+We start off by adding a player.
+This is entirely client-side.
+Our REST service has no separate way of creating or registering players other than adding scores for them.
+
+![add player - client side](slide_images/bowling_app_2.png)
+
+Now that we have a player, we can start entering scores for them.
+Again, we get the same results as with our command-line and REST interfaces.
+
+![add/colin/3](slide_images/bowling_app_3.png)
+
+![add/colin/3](slide_images/bowling_app_4.png)
+
+![add/colin/4](slide_images/bowling_app_5.png)
+
+![add/colin/10](slide_images/bowling_app_6.png)
+
+![add/colin/3](slide_images/bowling_app_7.png)
+
+Now, if you poke at this a little bit, you'll find it's far from perfect.
+As is, it won't handle invalid data (rolls greater than 10, for example).
+The rolls are stored independently in the client and the server (try sending a direct REST request from another browser in the middle of a game).
+It might be nice if the server returned the full list of rolls along with the score, so the client didn't have to keep any state in its display.
+It would be extra nice if it grouped the rolls by frame.
+
+Figure out how to do all that, if you want to learn something.
+You could also try implementing this in a different framework, like mochiweb or webmachine.
+
+
+## Ta-dah!
+
+So, we've created an elegant little algorithm, and built both a command-line and web interface to it.
+You've gotten a little taste of what it's like to work with Escript and Spooky.
+Hopefully, you've started learning to think in Erlang, and are getting the hang of the recursion and IPC patterns.
+
+There's a bunch of extra stuff that I didn't have time for in this talk, including a command-line testing tool for the REST service.
+You can find that, along with the full source for these examples, unit tests and so on in my [GitHub project for this talk](http://github.com/bluegraybox/Crafty-Erlang).
+That also has the S9 markup source for my slides, which you can [see on GitHub Pages](http://bluegraybox.github.com/Crafty-Erlang).
+You can follow my continuing adventures, and catch up on previous experiments, ponderings, and rants at [my blog](http://bluegraybox.com/blog).
+
+## Think small, have fun
 
