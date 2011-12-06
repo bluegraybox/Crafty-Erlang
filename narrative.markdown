@@ -520,8 +520,7 @@ As is, it won't handle invalid data (rolls greater than 10, for example).
 The rolls are stored independently in the client and the server (try sending a direct REST request from another browser in the middle of a game).
 It might be nice if the server returned the full list of rolls along with the score, so the client didn't have to keep any state in its display.
 It would be extra nice if it grouped the rolls by frame.
-
-Figure out how to do all that, if you want to learn something.
+If you want a good little learning project, try fixing any of these.
 You could also try implementing this in a different framework, like mochiweb or webmachine.
 
 
