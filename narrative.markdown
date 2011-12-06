@@ -480,13 +480,13 @@ At that point it returns and goes on to the `spooky:stop/0` line, which shuts do
 Now that the server is up and running, we can test it by hitting our REST service directly from a browser.
 We can see that it gets the same results as our command-line run did.
 
-![add/colin/3](slide_images/bowling_rest_1.png)
+![add/colin/3](../../raw/master/slide_images/bowling_rest_1.png)
 
-![add/colin/4](slide_images/bowling_rest_2.png)
+![add/colin/4](../../raw/master/slide_images/bowling_rest_2.png)
 
-![add/colin/10](slide_images/bowling_rest_3.png)
+![add/colin/10](../../raw/master/slide_images/bowling_rest_3.png)
 
-![add/colin/3](slide_images/bowling_rest_4.png)
+![add/colin/3](../../raw/master/slide_images/bowling_rest_4.png)
 
 
 ## Webapp interaction
@@ -494,26 +494,26 @@ We can see that it gets the same results as our command-line run did.
 Now we get to the web client itself.
 Hitting our base URL brings up the main page.
 
-![/](slide_images/bowling_app_1.png)
+![/](../../raw/master/slide_images/bowling_app_1.png)
 
 We start off by adding a player.
 This is entirely client-side.
 Our REST service has no separate way of creating or registering players other than adding scores for them.
 
-![add player - client side](slide_images/bowling_app_2.png)
+![add player - client side](../../raw/master/slide_images/bowling_app_2.png)
 
 Now that we have a player, we can start entering scores for them.
 Again, we get the same results as with our command-line and REST interfaces.
 
-![add/colin/3](slide_images/bowling_app_3.png)
+![add/colin/3](../../raw/master/slide_images/bowling_app_3.png)
 
-![add/colin/3](slide_images/bowling_app_4.png)
+![add/colin/3](../../raw/master/slide_images/bowling_app_4.png)
 
-![add/colin/4](slide_images/bowling_app_5.png)
+![add/colin/4](../../raw/master/slide_images/bowling_app_5.png)
 
-![add/colin/10](slide_images/bowling_app_6.png)
+![add/colin/10](../../raw/master/slide_images/bowling_app_6.png)
 
-![add/colin/3](slide_images/bowling_app_7.png)
+![add/colin/3](../../raw/master/slide_images/bowling_app_7.png)
 
 Now, if you poke at this a little bit, you'll find it's far from perfect.
 As is, it won't handle invalid data (rolls greater than 10, for example).
