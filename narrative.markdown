@@ -49,26 +49,32 @@ The beginning and end are usually the easiest parts, so let's tackle those first
 The beginning of a recursion is just a function that takes the input, sets up any initial state, ouput accumulators, etc., and recurses.
 In this case, we take an Input list and set up an empty output list.
 
-    %% beginning
-    func(Input) ->
-        Output = [],
-        func(Input, Output).
+```erlang
+%% beginning
+func(Input) ->
+    Output = [],
+    func(Input, Output).
+```
 
 The end stage is also easy to define.
 We pattern-match on an empty input list, and return our output list.
 (I'll get to why we reverse the output list in a minute.)
 
-    %% end
-    func([], Output) -> lists:reverse(Output).
+```erlang
+%% end
+func([], Output) -> lists:reverse(Output).
+```
 
 The middle stage defines what we do with any single element in the list, and how we move on to the next one.
 Here, we just pop the first element off the input list, munge it to create a new element, push that onto the output list, and recurse with the newly-diminished input and newly-extended output.
 (And note that we add our new element at the beginning of the list, rather than the end.)
 
-    %% middle
-    func([First | Rest], Output) ->
-        NewFirst = munge(First),
-        func(Rest, [NewFirst | Output]);
+```erlang
+%% middle
+func([First | Rest], Output) ->
+    NewFirst = munge(First),
+    func(Rest, [NewFirst | Output]);
+```
 
 That's all there is to the basics of recursion.
 You may have multiple inputs and outputs, and there could be multiple middle and end functions to handle different cases (and we'll see a more interesting example in a minute), but the basic pattern is the same.
@@ -81,7 +87,9 @@ This was one of those little Erlang weirdnesses that really bugged be until I un
 The key is that lists in Erlang are not just arrays; they're linked lists, and critically, _singly_-linked lists.
 So when you create a list like
 
-    Foo = [cat, dog].
+```erlang
+Foo = [cat, dog].
+```
 
 You get a logical list structure that looks like
 
@@ -91,7 +99,9 @@ You get a logical list structure that looks like
 
 If you create a new list by prepending an element to Foo,
 
-    Bar = [monkey | Foo].
+```erlang
+Bar = [monkey | Foo].
+```
 
 The logical structure now looks like
 
@@ -101,7 +111,9 @@ The logical structure now looks like
 
 And if you create another new list by prepending more elements to Foo,
 
-    Baz = [elephant, tiger | Foo].
+```erlang
+Baz = [elephant, tiger | Foo].
+```
 
 The logical structure will now look like
 
@@ -129,26 +141,32 @@ In Erlang, we're just going to define a recursive function that takes a list of 
 Again, we start by defining the beginning of the recursion.
 We get a list of rolls, set our initial frame to 1 and score to 0, and recurse.
 
-    %% Beginning: score/1 -> score/3
-    score(Rolls) ->
-        Frame = 1,
-        Score = 0,
-        score(Rolls, Frame, Score).
+```erlang
+%% Beginning: score/1 -> score/3
+score(Rolls) ->
+    Frame = 1,
+    Score = 0,
+    score(Rolls, Frame, Score).
+```
 
 The end is even simpler.
 There are ten frames in a game, so when our frame count gets to 11, we're done.
 Just return our score.
 
-    %% End
-    score(_Rolls, 11, Score) -> Score.
+```erlang
+%% End
+score(_Rolls, 11, Score) -> Score.
+```
 
 For the middle, we're going to start with the normal case for scoring a frame, ignoring strikes and spares.
 Here, we just pop the next two rolls off the input, add them to our total score, and recurse with an incremented frame.
 
-    %% Middle
-    score([Roll1, Roll2 | Rest], Frame, Score) ->
-        NewScore = Score + Roll1 + Roll2,
-        score(Rest, Frame + 1, NewScore).
+```erlang
+%% Middle
+score([Roll1, Roll2 | Rest], Frame, Score) ->
+    NewScore = Score + Roll1 + Roll2,
+    score(Rest, Frame + 1, NewScore).
+```
 
 Now we need to deal with the strike and spare cases.
 Erlang's pattern matching lets us do this very cleanly.
@@ -156,44 +174,48 @@ For strikes, define a score function (in proper terms, a clause of the score fun
 For spares, we use a guard expression to match only when the next two rolls add up to 10.
 In both cases, we need to look at rolls in following frames (2 for a strike, 1 for a spare) and add those to our score.
 
-    %% Strike
-    score([10 | Rest], Frame, Score) ->
-        [Bonus1, Bonus2 | _] = Rest,
-        NewScore = Score + 10 + Bonus1 + Bonus2,
-        score(Rest, Frame + 1, NewScore);
+```erlang
+%% Strike
+score([10 | Rest], Frame, Score) ->
+    [Bonus1, Bonus2 | _] = Rest,
+    NewScore = Score + 10 + Bonus1 + Bonus2,
+    score(Rest, Frame + 1, NewScore);
 
-    %% Spare
-    score([Roll1, Roll2 | Rest], Frame, Score) when Roll1 + Roll2 == 10 ->
-        [Bonus1 | _] = Rest,
-        NewScore = Score + 10 + Bonus1,
-        score(Rest, Frame + 1, NewScore);
+%% Spare
+score([Roll1, Roll2 | Rest], Frame, Score) when Roll1 + Roll2 == 10 ->
+    [Bonus1 | _] = Rest,
+    NewScore = Score + 10 + Bonus1,
+    score(Rest, Frame + 1, NewScore);
+```
 
 That's pretty much it for the scoring rules.
 We still need to handle incomplete frames, so by the time we're done with that, the whole thing looks like this.
 
-    score(Rolls) -> score(Rolls, 1, 0).
+```erlang
+score(Rolls) -> score(Rolls, 1, 0).
 
-    score(_Rolls, 11, Score) -> Score;
+score(_Rolls, 11, Score) -> Score;
 
-    score([10 | Rest], Frame, Score) ->
-        score(Rest, Frame + 1, Score + 10 + strike_bonus(Rest));
+score([10 | Rest], Frame, Score) ->
+    score(Rest, Frame + 1, Score + 10 + strike_bonus(Rest));
 
-    score([Roll1, Roll2 | Rest], Frame, Score) when (Roll1 + Roll2 == 10) ->
-        score(Rest, Frame + 1, Score + 10 + spare_bonus(Rest));
+score([Roll1, Roll2 | Rest], Frame, Score) when (Roll1 + Roll2 == 10) ->
+    score(Rest, Frame + 1, Score + 10 + spare_bonus(Rest));
 
-    score([Roll1, Roll2 | Rest], Frame, Score) ->
-        score(Rest, Frame + 1, Score + Roll1 + Roll2);
+score([Roll1, Roll2 | Rest], Frame, Score) ->
+    score(Rest, Frame + 1, Score + Roll1 + Roll2);
 
-    score([Roll1], _Frame, Score) -> Score + Roll1;
-    score([], _Frame, Score) -> Score.
+score([Roll1], _Frame, Score) -> Score + Roll1;
+score([], _Frame, Score) -> Score.
 
 
-    spare_bonus([]) -> 0;
-    spare_bonus([Bonus1 | _Rest]) -> Bonus1.
+spare_bonus([]) -> 0;
+spare_bonus([Bonus1 | _Rest]) -> Bonus1.
 
-    strike_bonus([]) -> 0;
-    strike_bonus([Only]) -> Only;
-    strike_bonus([Bonus1, Bonus2 | _Rest]) -> Bonus1 + Bonus2.
+strike_bonus([]) -> 0;
+strike_bonus([Only]) -> Only;
+strike_bonus([Bonus1, Bonus2 | _Rest]) -> Bonus1 + Bonus2.
+```
 
 
 Ok, that's an algorithm.
@@ -209,14 +231,16 @@ We can enter a player name and a roll.
 `string:tokens/2` will split that into separate strings.
 `string:to_integer/1` will convert the roll to a number we can work with.
 
-    Eshell V5.8.4  (abort with ^G)
-    1> Line = io:get_line("Next> ").
-    Next> colin 4
-    "colin 4\n"
-    2> [Player, RollText] = string:tokens(Line, " \t\n").
-    ["colin","4"]
-    3> {Roll, _} = string:to_integer(RollText).
-    {4,[]}
+```erlang
+Eshell V5.8.4  (abort with ^G)
+1> Line = io:get_line("Next> ").
+Next> colin 4
+"colin 4\n"
+2> [Player, RollText] = string:tokens(Line, " \t\n").
+["colin","4"]
+3> {Roll, _} = string:to_integer(RollText).
+{4,[]}
+```
 
 Now we need somewhere to store it.
 A dictionary will let us keep track of multiple players.
@@ -225,29 +249,35 @@ A dictionary will let us keep track of multiple players.
 Note that it does _not_ replace the key's value (`dict:store/3` does that).
 `dict:find/2` returns the value for a key, which in this case is a list of rolls.
 
-    4> GameData = dict:new().
-    {dict,0,...
-    5> NewGameData = dict:append(Player, Roll, GameData).
-    {dict,1,...
-    6> {ok, Rolls} = dict:find(Player, NewGameData).
-    {ok,[4]}
+```erlang
+4> GameData = dict:new().
+{dict,0,...
+5> NewGameData = dict:append(Player, Roll, GameData).
+{dict,1,...
+6> {ok, Rolls} = dict:find(Player, NewGameData).
+{ok,[4]}
+```
 
 Finally, we pass the list of rolls to our scoring function (not very interesting yet).
 
-    7> Score = bowling_game:score(Rolls).
-    4
+```erlang
+7> Score = bowling_game:score(Rolls).
+4
+```
 
 Normally now, you'd throw a while loop arounds this stuff, but this is Erlang, so we wrap it in a recursive function.
 
-    loop(GameData) ->
-        Line = io:get_line("Next> "),
-        [Player, RollText] = string:tokens(Line, " \t\n"),
-        {Roll, _} = string:to_integer(RollText),
-        NewGameData = dict:append(Player, Roll, GameData),
-        {ok, Rolls} = dict:find(Player, NewGameData).
-        Score = bowling_game:score(Rolls).
-        io:format("New score for ~s: ~p~n", [Player, Score]),
-        loop(NewGameData).
+```erlang
+loop(GameData) ->
+    Line = io:get_line("Next> "),
+    [Player, RollText] = string:tokens(Line, " \t\n"),
+    {Roll, _} = string:to_integer(RollText),
+    NewGameData = dict:append(Player, Roll, GameData),
+    {ok, Rolls} = dict:find(Player, NewGameData).
+    Score = bowling_game:score(Rolls).
+    io:format("New score for ~s: ~p~n", [Player, Score]),
+    loop(NewGameData).
+```
 
 This is the middle of a recursion, so we need to add a beginning.
 That's simple enough - invoke loop with a new dictionary.
@@ -256,31 +286,35 @@ but it's easier if we wrap it in an Escript.
 (If you're not familiar with Escript, it lets you run Erlang code as a script, the way you would with Perl, Python, Ruby, or whatever.
 You don't even need to define a module, just a main/1 function that takes the command-line parameters as a list of strings.)
 
-    #!/usr/local/bin/escript
-    #
-    # scorekeeper.erl 
+```erlang
+#!/usr/local/bin/escript
+#
+# scorekeeper.erl 
 
-    -import(bowling_game).
+-import(bowling_game).
 
-    main(_) -> loop(dict:new()).
+main(_) -> loop(dict:new()).
 
-    loop(GameData) ->
-        ...
+loop(GameData) ->
+    ...
+```
 
 That's the beginning and middle of the recursion.
 We're not going to bother defining an end - you can just `ctrl-c` out of the loop.
 Here's a sample of what we get when we run it:
 
-    $ ./scorekeeper.erl 
-    Next> colin 3
-    New score for colin: 3
-    Next> colin 4
-    New score for colin: 7
-    Next> colin 10
-    New score for colin: 17
-    Next> colin 3
-    New score for colin: 23
-    Next> 
+```erlang
+$ ./scorekeeper.erl 
+Next> colin 3
+New score for colin: 3
+Next> colin 4
+New score for colin: 7
+Next> colin 10
+New score for colin: 17
+Next> colin 3
+New score for colin: 23
+Next> 
+```
 
 (Note that it correctly handles the strike!)
 
@@ -313,41 +347,45 @@ So what does that look like?
 Well, remember the command-line loop?
 Let's break that up into sections.
 
-    loop(GameData) ->
-        %% receive input
-        Line = io:get_line("Next> "),
-        [Player, RollText] = string:tokens(Line, " \t\n"),
-
-        %% process input
-        {Roll, _} = string:to_integer(RollText),
-        NewGameData = dict:append(Player, Roll, GameData),
-        {ok, Rolls} = dict:find(Player, NewGameData).
-        Score = bowling_game:score(Rolls).
-
-        %% print new score
-        io:format("New score for ~s: ~p~n", [Player, Score]),
-
-        %% recurse with new state
-        loop(NewGameData).
+```erlang
+loop(GameData) ->
+    %% receive input
+    Line = io:get_line("Next> "),
+    [Player, RollText] = string:tokens(Line, " \t\n"),
+    
+    %% process input
+    {Roll, _} = string:to_integer(RollText),
+    NewGameData = dict:append(Player, Roll, GameData),
+    {ok, Rolls} = dict:find(Player, NewGameData).
+    Score = bowling_game:score(Rolls).
+    
+    %% print new score
+    io:format("New score for ~s: ~p~n", [Player, Score]),
+    
+    %% recurse with new state
+    loop(NewGameData).
+```
 
 Now here's the message-handling loop.
 
-    loop(GameData) ->
-        %% receive input
-        receive {From, {append, Player, RollText}} ->
-
-            %% process input - this is the same
-            {Roll, _} = string:to_integer(RollText),
-            NewGameData = dict:append(Player, Roll, GameData),
-            {ok, Rolls} = dict:find(Player, NewGameData),
-            Score = bowling_game:score(Rolls),
-
-            %% respond with new score
-            From ! Score,
-
-            %% recurse with new state
-            loop(NewGameData)
-        end.
+```erlang
+loop(GameData) ->
+    %% receive input
+    receive {From, {append, Player, RollText}} ->
+        
+        %% process input - this is the same
+        {Roll, _} = string:to_integer(RollText),
+        NewGameData = dict:append(Player, Roll, GameData),
+        {ok, Rolls} = dict:find(Player, NewGameData),
+        Score = bowling_game:score(Rolls),
+        
+        %% respond with new score
+        From ! Score,
+        
+        %% recurse with new state
+        loop(NewGameData)
+    end.
+```
 
 That's it.
 Instead of waiting for command-line input, we wait for a message.
@@ -359,18 +397,22 @@ Again, that's the middle; how do we start this recursion?
 As with the CLI, we need a beginning function that creates the dictionary.
 The difference here is that instead of calling `loop/1` directly, we wrap it in a closure and spawn it off as a new process.
 
-    init() ->
-        Data = dict:new(),
-        Start = fun() -> loop(Data) end,
-        spawn(Start).  % returns process id
+```erlang
+init() ->
+    Data = dict:new(),
+    Start = fun() -> loop(Data) end,
+    spawn(Start).  % returns process id
+```
 
 For convenience, we'll add an `append/3` function for our clients.
 It hides the message format, and makes the asynchronous request synchronous.
 This makes it look a lot like we're creating an object and updating it.
 
-    append(Player, RollText, Pid) ->
-        Pid ! {self(), {append, Player, RollText}},
-        receive Resp -> Resp end.
+```erlang
+append(Player, RollText, Pid) ->
+    Pid ! {self(), {append, Player, RollText}},
+    receive Resp -> Resp end.
+```
 
 
 ## REST API
@@ -393,10 +435,12 @@ Yes, I know this isn't entirely kosher for a REST API - we shouldn't be modifyin
 To create a Spooky web application, we just need to create a module that has the "spooky" behavior and exports Spooky's callback functions.
 To use our bowling module, we'll need to import that.
 
-    -module(bowling_web).
-    -behaviour(spooky).
-    -export([init/1, get/2]).  % Spooky API
-    -import(bowling_service).
+```erlang
+-module(bowling_web).
+-behaviour(spooky).
+-export([init/1, get/2]).  % Spooky API
+-import(bowling_service).
+```
 
 `init/1` is called once, when the server starts up.
 It starts up the bowling service we just defined, and registers its process id as `bowl_svc`.
@@ -405,44 +449,52 @@ This would be especially useful in a situation where the service might be restar
 Other processes could continue to use it without needing to know the new PID.
 The return value configures Spooky to start up on port 8000.
 
-    init([])->
-        register(bowl_svc, bowling_service:init()),
-        [{port, 8000}].
+```erlang
+init([])->
+    register(bowl_svc, bowling_service:init()),
+    [{port, 8000}].
+```
 
 `get/2` is called to handle each HTTP GET request.
 Spooky splits up the URL's resource path into a list of strings.
 That makes it easy to match on patterns, like so.
 
-     %% REST handler
-    get(_Req, ["add", Player, RollText])->
-        Score = bowling_service:append(Player, RollText, bowl_svc),
-        {200, io_lib:format("~p", [Score])};
+```erlang
+ %% REST handler
+get(_Req, ["add", Player, RollText])->
+    Score = bowling_service:append(Player, RollText, bowl_svc),
+    {200, io_lib:format("~p", [Score])};
+```
 
 We'll also need to define handlers for the base web page and any associated resources, such as Javascript or CSS files, or images.
 If there is no resource path - the URL is just the host and port - we'll return our base page.
 Otherwise, we treat the resource path as a relative path to a file, and try to return that.
 
-     %% static page handlers
-    get(Req, [])-> get(Req, ["form.html"]);  % main page
+```erlang
+ %% static page handlers
+get(Req, [])-> get(Req, ["form.html"]);  % main page
 
-    get(_Req, Path)->  % other static resources
-        Filename = filename:join(Path),
-        case file:read_file(Filename) of
-            {ok, PageBytes} -> {200, binary_to_list(PageBytes)};
-            {error, Reason} -> {404, Reason}
-        end.
+get(_Req, Path)->  % other static resources
+    Filename = filename:join(Path),
+    case file:read_file(Filename) of
+        {ok, PageBytes} -> {200, binary_to_list(PageBytes)};
+        {error, Reason} -> {404, Reason}
+    end.
+```
 
 ## Run it!
 
 We can start up the Spooky server from the Erlang shell as long as we add Spooky and its dependencies to the code path.
 Note that what we're doing here is starting the Spooky server, and telling it to use our `bowling_web` module as its plug-in request handler.
 
-    $ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
-    ...
-    Eshell V5.8.4  (abort with ^G)
-    1> spooky:start_link(bowling_web).
-    {ok,<0.35.0>}
-    2> 
+```erlang
+$ erl -pa $SPOOKY/ebin -pa $SPOOKY/deps/*/ebin
+...
+Eshell V5.8.4  (abort with ^G)
+1> spooky:start_link(bowling_web).
+{ok,<0.35.0>}
+2> 
+```
 
 Of course, I got tired of typing that every time, so I wrote an Escript to do it.
 This uses a `SPOOKY_DIR` environment variable to find all the dependencies.
@@ -450,25 +502,27 @@ As an extra bonus, it compiles all our modules for us.
 Note that the same process is compiling them and then loading them.
 This is Erlang's hot code reloading in action, in a low-key way.
 
-    #!/usr/local/bin/escript
+```erlang
+#!/usr/local/bin/escript
 
-    main([]) ->
-        SpookyDir = os:getenv("SPOOKY_DIR"),
-        %% Add spooky and its dependencies to the code path.
-        true = code:add_path(SpookyDir ++ "/ebin"),
-        Deps = filelib:wildcard(SpookyDir ++ "/deps/*/ebin"),
-        ok = code:add_paths(Deps),
-
-        %% Compile our modules, just to be safe.
-        c:c(bowling_game),
-        c:c(bowling_service),
-        c:c(bowling_web),
-
-        spooky:start_link(bowling_web),
-        io:format("Started spooky~n"),
-
-        io:get_line("Return to exit...  "),
-        spooky:stop().
+main([]) ->
+    SpookyDir = os:getenv("SPOOKY_DIR"),
+    %% Add spooky and its dependencies to the code path.
+    true = code:add_path(SpookyDir ++ "/ebin"),
+    Deps = filelib:wildcard(SpookyDir ++ "/deps/*/ebin"),
+    ok = code:add_paths(Deps),
+    
+    %% Compile our modules, just to be safe.
+    c:c(bowling_game),
+    c:c(bowling_service),
+    c:c(bowling_web),
+    
+    spooky:start_link(bowling_web),
+    io:format("Started spooky~n"),
+    
+    io:get_line("Return to exit...  "),
+    spooky:stop().
+```
 
 This is a script, and when it gets to its end it shuts down any processes it started, including Spooky.
 So while we started up Spooky as before, we then needed a way to keep the script from exiting.
